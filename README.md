@@ -1,2 +1,4 @@
-# Tower
-Mobile Tower game
+# Capibarium
+Общий проект с разводкой для Капибариума
+
+Версия Unity - 2022.3.19

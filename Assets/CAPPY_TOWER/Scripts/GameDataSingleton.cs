@@ -1,0 +1,46 @@
+﻿using UnityEngine;
+
+/// <summary>
+/// Как писал в других комментариях - данный класс эффективно заменяет PlayerPrefs,
+/// потому что обращения через строчные названия это отвратительный 
+/// инженерный дизайн и легаси рудимент, за который Unity должно быть стыдно.
+/// </summary>
+internal static class GameDataSingleton
+{
+    private static int _playerCount = 1;
+    private static int _player1Score = 0;
+    private static int _player2Score = 0;
+
+    public static int PlayerCount
+    {
+        get => _playerCount;
+        set {
+            if (value == 1 || value == 2) _playerCount = value;
+            else Debug.LogError("Can't set player count to anything other than 1 or 2");    
+        }
+    }
+
+    public static int Player1Score { 
+        get => _player1Score;
+        set { 
+            if (value > -1) _player1Score = value;
+            else Debug.LogError("Player 1 score can't be negative");
+        }
+    }
+    public static int Player2Score
+    {
+        get => _player2Score;
+        set
+        {
+            if (value > -1) _player2Score = value; 
+            else Debug.LogError("Player 2 score can't be negative");
+        }
+    }
+
+    public static void Default()
+    {
+        _player1Score = 0;
+        _player2Score = 0;
+        _playerCount = 1;
+    }
+}
