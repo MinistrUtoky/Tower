@@ -7,6 +7,8 @@ internal class SettingsManager : MonoBehaviour
     [SerializeField]
     private GameObject _settingsPanel;
     [SerializeField]
+    private TMP_InputField _nameField;
+    [SerializeField]
     private TMP_Text _qualityIndicator;
     [SerializeField]
     private Slider _music;
@@ -15,6 +17,7 @@ internal class SettingsManager : MonoBehaviour
 
     private void Start()
     {
+        _nameField.text = SettingsSingleton.PlayerName;
         _music.value = SettingsSingleton.MusicLevel;
         _sounds.value = SettingsSingleton.SFXLevel;
        _qualityIndicator.text = SettingsSingleton.QualityLevelName;
@@ -25,6 +28,12 @@ internal class SettingsManager : MonoBehaviour
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
         _settingsPanel.SetActive(true);
+    }
+
+    public void OnNameChanged(string name)
+    {
+        SettingsSingleton.ChangeName(name);
+        _nameField.text = SettingsSingleton.PlayerName;
     }
 
     // Меняет качество изображения на лучше/хуже

@@ -22,7 +22,7 @@ internal class ClassicDroppableBlock : AbstractDroppableBlock
     public override void OnDrop()
     {
         IsStacked = false;
-        GetComponent<Rigidbody2D>().gravityScale = 5;
+        Rigidbody.gravityScale = 5;
     }
 
     protected override bool CanStackOn(Collider2D other)
@@ -41,11 +41,11 @@ internal class ClassicDroppableBlock : AbstractDroppableBlock
     private void PlaceOnTop(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(1, 0.5f);
-        Transform t = GetComponent<Rigidbody2D>().transform;
+        Transform t = Rigidbody.transform;
         // вспомнил, что bounds.extents определ€ет bounding box коллайдера, а не его собственные размерности 
         // заменил магическую константу определ€ющим ее размером объекта
         t.position = other.ClosestPoint(transform.position)
-                                + new Vector2(0, GetComponent<BoxCollider2D>().size.y * t.localScale.y / 2f);
+                                + new Vector2(0, Collider.size.y * t.localScale.y / 2f);
         // эффект отскакивани€ капибар при падении
         Image.transform.DOPunchPosition(Vector3.up, 1f, 2, 1f, false).SetEase(Ease.OutQuad);
     }
@@ -59,17 +59,17 @@ internal class ClassicDroppableBlock : AbstractDroppableBlock
     private void BasicMiss()
     {
         AudioSingleton.Instance.PlaySfx(2, 0.5f);
-        GetComponent<BoxCollider2D>().enabled = false;
+        Collider.enabled = false;
         Tower.TakeHit();
+        Tower.SpawnRandomDroppable();
         StartCoroutine(MissAnimation());
     }
 
     private void PlacePerfectly(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(3, 0.5f);
-        Transform t = GetComponent<Rigidbody2D>().transform;
-        t.position = other.transform.position
-                                + new Vector3(0, GetComponent<BoxCollider2D>().size.y * t.localScale.y);
+        Collider.transform.position = other.transform.position
+                                + new Vector3(0, Collider.size.y * Collider.transform.localScale.y);
         _perfectEffect.Play();
     }
 

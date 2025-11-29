@@ -4,16 +4,25 @@ using UnityEngine.SceneManagement;
 
 internal class TransitionManager : MonoBehaviour
 {
+    public static TransitionManager Instance { get; private set; }
+
     [SerializeField]
     private GameObject[] _startGameSlides;
     [SerializeField]
     private int _playersLeft = 1;
     [SerializeField]
     private string _menuSceneName = "EndgameMenu";
-    public static bool GameOn { get; private set; } = false;
+    public bool GameOn { get; private set; } = false;
 
     private void Awake()
     {
+        if (FindObjectsByType<TransitionManager>(FindObjectsSortMode.None).Length >= 2)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
         foreach (var slide in _startGameSlides) slide.SetActive(false);
         GameOn = false;
         StopAllCoroutines();
@@ -36,9 +45,7 @@ internal class TransitionManager : MonoBehaviour
             StartCoroutine(Endgame(reactionDelay));
         }
         else if (playerEndgameBanner != null)
-        {
             StartCoroutine(KillAfter(playerEndgameBanner, reactionDelay));
-        }
     }
 
     private IEnumerator KillAfter(GameObject playerEndgameBanner, float delay)

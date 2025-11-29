@@ -50,8 +50,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _clickScreenPart: 0
-  _droppables: []
-  _rareDroppables: []
+  _droppables:
+  - {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29, type: 3}
+  - {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950, type: 3}
+  _rareDroppables:
+  - {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8, type: 3}
+  - {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94, type: 3}
+  - {fileID: 6049604689655559132, guid: 63de2c64662e9d44f9181a0883bb28a3, type: 3}
   _towerRoot: {fileID: 0}
   _pendulum: {fileID: 8483712709179962078}
   _cameraToSpawn: {fileID: 0}
@@ -59,7 +64,6 @@ MonoBehaviour:
   _score: {fileID: 0}
   _heartsBG: {fileID: 0}
   _hearts: []
-  _endgameManager: {fileID: 0}
   _banner: {fileID: 0}
   _endgameResult: {fileID: 0}
 --- !u!1001 &3403456307060683136

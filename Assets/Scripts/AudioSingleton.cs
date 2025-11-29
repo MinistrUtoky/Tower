@@ -23,7 +23,7 @@ internal class AudioSingleton : MonoBehaviour
     {
         if (FindObjectsByType<AudioSingleton>(FindObjectsSortMode.None).Length >= 2)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         Instance = this;

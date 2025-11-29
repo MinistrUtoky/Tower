@@ -1,5 +1,4 @@
 using DG.Tweening;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -40,8 +39,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
 
     [Header("Endgame")]
     [SerializeField]
-    private TransitionManager _endgameManager;
-    [SerializeField]
     private GameObject _banner;
     [SerializeField]
     private TMP_Text _endgameResult;
@@ -51,7 +48,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     private bool _isShaking = false;
 
     private int _hp = 3;
-    private bool _isHanging = false;
 
     private float _currentScreenWidthCoef = 1f;
     private float _baseCameraOrthoWidth;
@@ -67,7 +63,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     protected new void Start()
     {
         base.Start();
-        Assert.IsNotNull(_endgameManager);
+        Assert.IsNotNull(TransitionManager.Instance);
         Assert.IsNotNull(_towerRoot);
         Assert.IsNotNull(_pendulum);
         SpawnRandomDroppable();
@@ -77,7 +73,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     private void Update()
     {
         MoveCurrent();
-        if (!TransitionManager.GameOn) return;
+        if (!TransitionManager.Instance.GameOn) return;
         // Если игра началась разблокируем нажатие экрана по истечению загрузки
         if (_startGameTouchBlock > 0f)
         {
@@ -85,22 +81,22 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
             return;
         }
 
-        if (IsAlive & _isHanging & Input.touchCount > 0)
+        if (IsAlive & IsHanging & Input.touchCount > 0)
         {
             if (_clickScreenPart == ScreenRelation.Full
-                || _clickScreenPart == ScreenRelation.LeftHalf & Input.touches[0].position.y > Screen.height / 2
-                || _clickScreenPart == ScreenRelation.RightHalf & Input.touches[0].position.y <= Screen.height / 2)
+                || _clickScreenPart == ScreenRelation.LeftHalf & Input.touches[0].position.y > Screen.height / 2f
+                || _clickScreenPart == ScreenRelation.RightHalf & Input.touches[0].position.y <= Screen.height / 2f)
                 DropCurrent();
         }
-        ShakeTower();
+        if (Current != null)
+            ShakeTower();
     }
 
     public override void Add(IDroppable towerBlock)
     {
         base.Add(towerBlock);
-        _currentScreenWidthCoef += TConfig.SCREEN_WIDTH_INCREMENT;
-        if (_currentScreenWidthCoef > TConfig.MAX_SCREEN_WIDTH_COEF)
-            _currentScreenWidthCoef = TConfig.MAX_SCREEN_WIDTH_COEF;
+        _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF, 
+                                                _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
 
         // заменил bounds.extents на size
         // заменил магическую константу определяющим ее размером объекта
@@ -120,8 +116,32 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
         _pendulum.SpeedUpPendulum();
         _cameraToSpawn.DOKill();
         _cameraToSpawn.DOOrthoSize(_currentScreenWidthCoef * _baseCameraOrthoWidth, 1f);
-
     }
+
+    public override void RemoveTopmost()
+    {
+        base.RemoveTopmost();
+        _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF,
+                                                _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
+
+        float newHeight = -Current.Collider.size.y * Current.Collider.transform.localScale.y * (TotalFloors > 1 ? TotalFloors - 2 : 0);
+
+        if (TotalFloors > TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT)
+        {
+            float newBackgroundHeight = Current.Collider.size.y
+                                            * Current.Collider.transform.localScale.y
+                                                * (TotalFloors - TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT);
+            _background.transform.parent.DOKill();
+            _background.transform.DOLocalMoveY(newBackgroundHeight, 1f); 
+        }
+        _towerRoot.transform.parent.DOKill();
+        _towerRoot.transform.parent.DOLocalMoveY(newHeight, 1f); 
+        _score.text = TotalFloors.ToString();
+        _pendulum.SpeedUpPendulum();
+        _cameraToSpawn.DOKill();
+        _cameraToSpawn.DOOrthoSize(_currentScreenWidthCoef * _baseCameraOrthoWidth, 1f);
+    }
+
     public override void TakeHit()
     {
         _hp -= 1;
@@ -143,7 +163,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
                         .SetEase(Ease.Linear)
                         .SetLoops(4, LoopType.Yoyo);
         }
-        SpawnRandomDroppable();
     }
 
     public override void Die()
@@ -155,43 +174,34 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
             GameDataSingleton.Player1Score = TotalFloors;
         if (_endgameResult != null)
             _endgameResult.text = TotalFloors.ToString();
-        _endgameManager.KillPlayer(_banner, 1f);
+        TransitionManager.Instance.KillPlayer(_banner, 1f);
     }
 
     public override void SpawnRandomDroppable()
     {
         GameObject toSpawn;
-        if (Random.Range(0, 1f) > 0.95f)
+        if (Random.Range(0, 1f) > 0.5f)
             toSpawn = _rareDroppables[Random.Range(0, _rareDroppables.Length)];
         else
             toSpawn = _droppables[Random.Range(0, _droppables.Length)];
-        IDroppable droppable = Instantiate(toSpawn,
-                                        new Vector3(_pendulum.transform.position.x,
-                                                    _pendulum.transform.position.y),
-                                        Quaternion.identity, _towerRoot)
-                                        .transform.GetChild(0).GetComponent<AbstractDroppableBlock>();
+        Vector3 whereToSpawn = new Vector3(_pendulum.transform.position.x, _pendulum.transform.position.y);
+        IDroppable droppable = Instantiate(toSpawn, whereToSpawn, Quaternion.identity, _towerRoot)
+                                                    .transform.GetChild(0).GetComponent<IDroppable>();
         base.SpawnDroppable(droppable);
-        _isHanging = true;
-    }
-
-    protected override void DropCurrent()
-    {
-        _isHanging = false;
-        base.DropCurrent();
     }
 
     private void MoveCurrent()
     {
-        if (Current != null)
+        if (IsHanging)
             Current.Collider.transform.position = new Vector3(_pendulum.transform.position.x,
-                                                        _pendulum.transform.position.y);
+                                                              _pendulum.transform.position.y);
     }
 
     /// <summary>
     /// Гармонические колебания башни, увеличивающиеся с ростом башни
     /// </summary>
     private void ShakeTower()
-    {
+    {       
         if (TotalFloors > TConfig.MIN_SHAKE_FLOORS)
         {
             if (!_isShaking)
@@ -199,14 +209,23 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
                 _shakeStartTime = Time.time;
                 _isShaking = true;
             }
-            int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, TotalFloors);
-            float globalScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
-            float abstractHeight = floorHeight * Current.Collider.size.y;
-            float absoluteMaxTowerHeight = Mathf.Max(TotalFloors, TConfig.MAX_SHAKE_FLOORS) * Current.Collider.size.y;
-            float absoluteMaxAngleTan = (globalScreenWidth / 20f) / absoluteMaxTowerHeight;
-            float rotationAngleLimit = Mathf.Atan(absoluteMaxAngleTan) * Mathf.Rad2Deg * ((float)floorHeight) / ((float)TConfig.MAX_SHAKE_FLOORS);
-            float currentShakeAngle = Mathf.Sin((Time.time - _shakeStartTime) * TConfig.SHAKE_SPEED) * rotationAngleLimit;
+            float currentShakeAngle = GetShakeAngleFromTime(TotalFloors, Current.Collider.size.y, _shakeStartTime);
             _towerRoot.rotation = Quaternion.Euler(new Vector3(0, 0, currentShakeAngle));
         }
     }
+
+    /// <summary>
+    /// Считает угол колебания в зависимости от высоты башни и пройденного временного промежутка
+    /// </summary>
+    private static float GetShakeAngleFromTime(int totalFloors, float blockHeight, float shakeStartTime)
+    {
+        int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, totalFloors);
+        float globalScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
+        float abstractHeight = floorHeight * blockHeight;
+        float absoluteMaxTowerHeight = Mathf.Max(totalFloors, TConfig.MAX_SHAKE_FLOORS) * abstractHeight;
+        float absoluteMaxAngleTan = (globalScreenWidth / 20f) / absoluteMaxTowerHeight;
+        float rotationAngleLimit = Mathf.Atan(absoluteMaxAngleTan) * Mathf.Rad2Deg * ((float)floorHeight) / ((float)TConfig.MAX_SHAKE_FLOORS);
+        return Mathf.Sin((Time.time - shakeStartTime) * TConfig.SHAKE_SPEED) * rotationAngleLimit;
+    }
+    
 }

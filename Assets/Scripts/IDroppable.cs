@@ -3,8 +3,9 @@ using UnityEngine;
 
 internal interface IDroppable
 {
-    // ” любого падающего в итоге есть коллайдер. ќстальное фабрике знать не об€зательно.
+    // ” любого падающего в итоге есть коллайдер и физическое тело. ќстальное фабрике знать не об€зательно.
     public abstract BoxCollider2D Collider { get; }
+    public abstract Rigidbody2D Rigidbody { get; }
 
     // –ешил что IStackable излишен и не обладает сигнатурными методами.
     public abstract void OnInit(ITower tower);

@@ -21,6 +21,7 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
     protected bool IsStacked { get; set; } = false;
 
     public BoxCollider2D Collider { get; private set; }
+    public Rigidbody2D Rigidbody { get; private set; }
 
     protected SpriteRenderer Image => _image;
 
@@ -28,6 +29,7 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
     {
         Assert.IsTrue(tag == "TowerBlock");
         Collider = GetComponent<BoxCollider2D>();
+        Rigidbody = GetComponent<Rigidbody2D>();
         _onStack.AddListener(FreezeBlock);
         _onPerfectMatch.AddListener(FreezeBlock);
     }
@@ -36,10 +38,9 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
     private void FreezeBlock(Collider2D other)
     {
         IsStacked = true;
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.FreezeAll;
-        rb.gravityScale = 0;
-        rb.transform.rotation = other.transform.rotation;
+        Rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
+        Rigidbody.gravityScale = 0;
+        Rigidbody.transform.rotation = other.transform.rotation;
     }
 
     // virtual потому что такая опция может понадобиться в случае расширения свойств спавна

@@ -22,7 +22,7 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
     {
         IsStacked = false;
         // Этот блок типо летит быстрееы
-        GetComponent<Rigidbody2D>().gravityScale = 10;
+        Rigidbody.gravityScale = 10;
     }
 
     protected override bool CanStackOn(Collider2D other) => Mathf.Abs(transform.position.x - other.transform.position.x) 
@@ -36,13 +36,11 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
     private void PlaceOnTop(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(1, 0.5f);
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        BoxCollider2D col = GetComponent<BoxCollider2D>();
-        rb.transform.position = other.ClosestPoint(transform.position)
-                                + new Vector2(0, col.size.y * rb.transform.localScale.y / 2f);
-        
+        Rigidbody.transform.position = other.ClosestPoint(transform.position)
+                                + new Vector2(0, Collider.size.y * Rigidbody.transform.localScale.y / 2f);
+
         // Они растут! Как грибы!
-        rb.transform.DOScale(1.9f, 0.5f)
+        Rigidbody.transform.DOScale(1.9f, 0.5f)
                             .SetEase(Ease.Linear)
                             .SetLoops(4, LoopType.Yoyo); 
     }
@@ -57,8 +55,9 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
     private void BasicMiss()
     {
         AudioSingleton.Instance.PlaySfx(2, 0.5f);
-        GetComponent<BoxCollider2D>().enabled = false;
+        Collider.enabled = false;
         Tower.TakeHit();
+        Tower.SpawnRandomDroppable();
         StartCoroutine(MissAnimation());
     }
 
@@ -66,11 +65,10 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
     private void PlacePerfectly(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(3, 0.5f);
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.transform.position = other.transform.position
-                                + new Vector3(0, GetComponent<BoxCollider2D>().size.y * rb.transform.localScale.y);
+        Rigidbody.transform.position = other.transform.position
+                                + new Vector3(0, Collider.size.y * Rigidbody.transform.localScale.y);
 
-        rb.transform.DOScale(1.8f, 1f)
+        Rigidbody.transform.DOScale(1.8f, 1f)
                             .SetEase(Ease.Linear)
                             .SetLoops(2, LoopType.Yoyo);
     }
