@@ -4,22 +4,18 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
+
 internal class ClassicDroppableFactory : AbstractDroppableFactory
 {
-    private enum ScreenRelation
+    public enum ScreenRelation
     {
         Full,
         LeftHalf,
         RightHalf
     }
-
     [Header("Gameplay")]
     [SerializeField]
     private ScreenRelation _clickScreenPart = ScreenRelation.Full;
-    [SerializeField]
-    private GameObject[] _droppables;
-    [SerializeField]
-    private GameObject[] _rareDroppables;
     [SerializeField]
     private Transform _towerRoot;
     [SerializeField]
@@ -36,12 +32,18 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     private Image _heartsBG;
     [SerializeField]
     private Image[] _hearts;
+    [SerializeField]
+    private Image _pendulumVisual;
+    [SerializeField]
+    private Image _pendulumHolderVisual;
 
     [Header("Endgame")]
     [SerializeField]
     private GameObject _banner;
     [SerializeField]
     private TMP_Text _endgameResult;
+
+    private BlockPresetScriptable _blocksPreset;
 
     // Время начала покачивания башни
     private float _shakeStartTime;
@@ -54,7 +56,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
 
     private float _startGameTouchBlock = TConfig.LOADING_TIME;
 
-
     private void Awake()
     {
         _baseCameraOrthoWidth = _cameraToSpawn.orthographicSize;
@@ -66,6 +67,9 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
         Assert.IsNotNull(TransitionManager.Instance);
         Assert.IsNotNull(_towerRoot);
         Assert.IsNotNull(_pendulum);
+        _blocksPreset = InterplayData.Location;
+        _pendulumVisual.sprite = _blocksPreset.PendulumImage;
+        _pendulumHolderVisual.sprite = _blocksPreset.PendulumHolderImage;
         SpawnRandomDroppable();
         _startGameTouchBlock = TConfig.LOADING_TIME;
     }
@@ -95,6 +99,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     public override void Add(IDroppable towerBlock)
     {
         base.Add(towerBlock);
+        towerBlock.Collider.transform.parent.parent = _towerRoot;
         _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF, 
                                                 _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
 
@@ -144,6 +149,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
 
     public override void TakeHit()
     {
+        if (_hp < 1) return;
         _hp -= 1;
         Destroy(_hearts[_hp]);
         _heartsBG.DOKill();
@@ -169,9 +175,9 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     {
         base.Die();
         if (_clickScreenPart == ScreenRelation.RightHalf)
-            GameDataSingleton.Player2Score = TotalFloors;
+            InterplayData.Player2Score = TotalFloors;
         else
-            GameDataSingleton.Player1Score = TotalFloors;
+            InterplayData.Player1Score = TotalFloors;
         if (_endgameResult != null)
             _endgameResult.text = TotalFloors.ToString();
         TransitionManager.Instance.KillPlayer(_banner, 1f);
@@ -179,14 +185,12 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
 
     public override void SpawnRandomDroppable()
     {
-        GameObject toSpawn;
-        if (Random.Range(0, 1f) > 0.5f)
-            toSpawn = _rareDroppables[Random.Range(0, _rareDroppables.Length)];
-        else
-            toSpawn = _droppables[Random.Range(0, _droppables.Length)];
         Vector3 whereToSpawn = new Vector3(_pendulum.transform.position.x, _pendulum.transform.position.y);
-        IDroppable droppable = Instantiate(toSpawn, whereToSpawn, Quaternion.identity, _towerRoot)
+
+        BlockPresetScriptable.Block block = _blocksPreset.RandomBlock();
+        IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
                                                     .transform.GetChild(0).GetComponent<IDroppable>();
+        droppable.Image.sprite = block.Image;
         base.SpawnDroppable(droppable);
     }
 
@@ -219,11 +223,10 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     /// </summary>
     private static float GetShakeAngleFromTime(int totalFloors, float blockHeight, float shakeStartTime)
     {
-        int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, totalFloors);
         float globalScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
-        float abstractHeight = floorHeight * blockHeight;
-        float absoluteMaxTowerHeight = Mathf.Max(totalFloors, TConfig.MAX_SHAKE_FLOORS) * abstractHeight;
+        float absoluteMaxTowerHeight = Mathf.Max(totalFloors, TConfig.MAX_SHAKE_FLOORS) * blockHeight;
         float absoluteMaxAngleTan = (globalScreenWidth / 20f) / absoluteMaxTowerHeight;
+        int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, totalFloors);
         float rotationAngleLimit = Mathf.Atan(absoluteMaxAngleTan) * Mathf.Rad2Deg * ((float)floorHeight) / ((float)TConfig.MAX_SHAKE_FLOORS);
         return Mathf.Sin((Time.time - shakeStartTime) * TConfig.SHAKE_SPEED) * rotationAngleLimit;
     }

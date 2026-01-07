@@ -38,7 +38,7 @@ internal class CongratsManager : MonoBehaviour
         if (AudioSingleton.Instance)
             AudioSingleton.Instance.StopSFX();
         StartCoroutine(
-            ShowFinale(GameDataSingleton.PlayerCount == 2? _twoPlayerSetup : _singlePlayerSetup));
+            ShowFinale(InterplayData.PlayerCount == 2? _twoPlayerSetup : _singlePlayerSetup));
     }
 
     /// <summary>
@@ -47,10 +47,14 @@ internal class CongratsManager : MonoBehaviour
     private IEnumerator ShowFinale(EndgameSetup setup)
     {
         if (setup.twoPlayer)
-            setup.winnerCongratsHolder.text = GameDataSingleton.Player1Score >= GameDataSingleton.Player2Score ?
+            setup.winnerCongratsHolder.text = InterplayData.Player1Score >= InterplayData.Player2Score ?
                                                                 "Ура!\nПобедил Игрок 1" : "Ура!\nПобедил Игрок 2";
+        // Увеличиваем общие очки игроков
+        ProgressSingleton.IncreaseScoreBy(InterplayData.Player1Score + InterplayData.Player2Score);
+        print("New Score: " + ProgressSingleton.Score);
+
         // Собирается информация в зависимости от результата
-        AssembleResultScreen(setup.player1Info, setup.twoPlayer ? setup.player2Info : null, GameDataSingleton.Player1Score, GameDataSingleton.Player2Score);
+        AssembleResultScreen(setup.player1Info, setup.twoPlayer ? setup.player2Info : null, InterplayData.Player1Score, InterplayData.Player2Score);
         setup.showScreen.SetActive(true);
 
         // Ждем действия игрока и выключаем
@@ -62,7 +66,7 @@ internal class CongratsManager : MonoBehaviour
             yield return null;
         }
         print("Congratulation finished naturally");
-        GameDataSingleton.Default();
+        InterplayData.Default();
         SceneManager.LoadScene(0);
     }
 

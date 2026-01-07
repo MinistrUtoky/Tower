@@ -23,7 +23,7 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
     public BoxCollider2D Collider { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
 
-    protected SpriteRenderer Image => _image;
+    public SpriteRenderer Image => _image;
 
     protected void Awake()
     {
@@ -54,7 +54,11 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
             Debug.LogError("The block cannot be initialized twice or have two towers as it's parent!");
             return;
         }
-        Image.sortingOrder = tower.TotalFloors % 32765 + 3;
+        // Теперь если мы хотим строить башню "От себя" у нас есть такая возможность.
+        if (InterplayData.Location.ReverseOverlap)
+            Image.sortingOrder = (32699 - tower.TotalFloors) % 32700 + 3;
+        else
+            Image.sortingOrder = tower.TotalFloors % 32700 + 3;
         Tower = tower;
     }
     // не все падающие блоки не застаканы по дефолту и падают с гравитацией 5

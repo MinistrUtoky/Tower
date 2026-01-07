@@ -1,28 +1,33 @@
-п»їusing UnityEngine;
+using UnityEngine;
 
 /// <summary>
-/// РљР°Рє РїРёСЃР°Р» РІ РґСЂСѓРіРёС… РєРѕРјРјРµРЅС‚Р°СЂРёСЏС… - РґР°РЅРЅС‹Р№ РєР»Р°СЃСЃ СЌС„С„РµРєС‚РёРІРЅРѕ Р·Р°РјРµРЅСЏРµС‚ PlayerPrefs,
-/// РїРѕС‚РѕРјСѓ С‡С‚Рѕ РѕР±СЂР°С‰РµРЅРёСЏ С‡РµСЂРµР· СЃС‚СЂРѕС‡РЅС‹Рµ РЅР°Р·РІР°РЅРёСЏ СЌС‚Рѕ РѕС‚РІСЂР°С‚РёС‚РµР»СЊРЅС‹Р№ 
-/// РёРЅР¶РµРЅРµСЂРЅС‹Р№ РґРёР·Р°Р№РЅ Рё Р»РµРіР°СЃРё СЂСѓРґРёРјРµРЅС‚, Р·Р° РєРѕС‚РѕСЂС‹Р№ Unity РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЃС‚С‹РґРЅРѕ.
+/// Как писал в других комментариях - данный класс эффективно заменяет PlayerPrefs,
+/// потому что обращения через строчные названия это отвратительный 
+/// инженерный дизайн и легаси рудимент, за который Unity должно быть стыдно.
 /// </summary>
-internal static class GameDataSingleton
+public static class InterplayData
 {
     private static int _playerCount = 1;
     private static int _player1Score = 0;
     private static int _player2Score = 0;
 
+    private static BlockPresetScriptable _selectedPreset = new();
+
     public static int PlayerCount
     {
         get => _playerCount;
-        set {
+        set
+        {
             if (value == 1 || value == 2) _playerCount = value;
-            else Debug.LogError("Can't set player count to anything other than 1 or 2");    
+            else Debug.LogError("Can't set player count to anything other than 1 or 2");
         }
     }
 
-    public static int Player1Score { 
+    public static int Player1Score
+    {
         get => _player1Score;
-        set { 
+        set
+        {
             if (value > -1) _player1Score = value;
             else Debug.LogError("Player 1 score can't be negative");
         }
@@ -32,9 +37,15 @@ internal static class GameDataSingleton
         get => _player2Score;
         set
         {
-            if (value > -1) _player2Score = value; 
+            if (value > -1) _player2Score = value;
             else Debug.LogError("Player 2 score can't be negative");
         }
+    }
+
+    public static BlockPresetScriptable Location 
+    {
+        get => _selectedPreset;
+        set { _selectedPreset = value; }
     }
 
     public static void Default()
@@ -42,5 +53,7 @@ internal static class GameDataSingleton
         _player1Score = 0;
         _player2Score = 0;
         _playerCount = 1;
+        _selectedPreset = new();
     }
+
 }

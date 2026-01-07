@@ -12,14 +12,14 @@ internal class PendulumPhysical : MonoBehaviour
     [SerializeField, Range(1, 179)]
     private float _maxAngle;
 
-    private Tweener _pendulumTweenner;
+    private Tweener _pendulumTweener;
     private float _currentTweenerCoef = 1f;
 
     private float _swingTime = 2f;
 
     private void Start()
     {
-        _pendulumTweenner = _rb.transform.DOLocalRotate(new Vector3(0, 0, _maxAngle), _swingTime)
+        _pendulumTweener = _rb.transform.DOLocalRotate(new Vector3(0, 0, _maxAngle), _swingTime)
             .SetEase(Ease.InOutSine)
             .SetLoops(-1, LoopType.Yoyo);
         AudioSingleton.Instance.ChangeLoopedPitch(_speed / 15000f * _currentTweenerCoef);
@@ -36,7 +36,7 @@ internal class PendulumPhysical : MonoBehaviour
     {
         _currentTweenerCoef += 0.02f;
         if (_currentTweenerCoef > 2f) _currentTweenerCoef = 2f;
-        _pendulumTweenner.timeScale = _currentTweenerCoef;
+        _pendulumTweener.timeScale = _currentTweenerCoef;
         AudioSingleton.Instance.ChangeLoopedPitch(_speed / 15000f * _currentTweenerCoef);
     }
 }

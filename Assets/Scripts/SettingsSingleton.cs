@@ -4,10 +4,10 @@ using UnityEngine;
 
 internal static class SettingsSingleton
 {
-    private const string Name = "PlayerName";
-    private const string Music = "Music";
-    private const string SoundFX = "SoundFX";
-    private const string Quality = "QualityPreset";
+    private const string NAME = "PlayerName";
+    private const string MUSIC = "Music";
+    private const string SOUNDFX = "SoundFX";
+    private const string QUALITY = "QualityPreset";
 
     private static string RandomHash
     {
@@ -22,10 +22,10 @@ internal static class SettingsSingleton
         }
     }
 
-    public static string PlayerName => PlayerPrefs.GetString(Name, "Player" + RandomHash);
-    public static float MusicLevel => PlayerPrefs.GetFloat(Music, 1f);
-    public static float SFXLevel => PlayerPrefs.GetFloat(SoundFX, 1f);
-    public static int QualityLevel => PlayerPrefs.GetInt(Quality, 0);
+    public static string PlayerName => PlayerPrefs.GetString(NAME, "Player" + RandomHash);
+    public static float MusicLevel => PlayerPrefs.GetFloat(MUSIC, 1f);
+    public static float SFXLevel => PlayerPrefs.GetFloat(SOUNDFX, 1f);
+    public static int QualityLevel => PlayerPrefs.GetInt(QUALITY, 0);
     public static string QualityLevelName
     {
         get
@@ -42,11 +42,11 @@ internal static class SettingsSingleton
     private static bool _musicLevelChanged = false;
     public static bool MusicLevelChanged { 
         get 
-        {
-            if (!_musicLevelChanged) return false;
-            bool changed = _musicLevelChanged;
+        {   
+            if (!_musicLevelChanged) 
+                return false;
             _musicLevelChanged = false;
-            return changed;  
+            return true;  
         }
     }
 
@@ -54,7 +54,7 @@ internal static class SettingsSingleton
     {
         if (newLevel < 0f) newLevel = 0f;
         if (newLevel > 1f) newLevel = 1f;
-        PlayerPrefs.SetFloat(Music, newLevel);
+        PlayerPrefs.SetFloat(MUSIC, newLevel);
         _musicLevelChanged = true;
         PlayerPrefs.Save();
     } 
@@ -63,7 +63,7 @@ internal static class SettingsSingleton
     {
         if (newLevel < 0f) newLevel = 0f;
         if (newLevel > 1f) newLevel = 1f;
-        PlayerPrefs.SetFloat(SoundFX, newLevel);
+        PlayerPrefs.SetFloat(SOUNDFX, newLevel);
         PlayerPrefs.Save();
     }
 
@@ -73,12 +73,13 @@ internal static class SettingsSingleton
             preset = 0;
         else if (preset < 0)
             preset = QualitySettings.names.Length - 1;
-        PlayerPrefs.SetInt(Quality, preset);
+        PlayerPrefs.SetInt(QUALITY, preset);
         PlayerPrefs.Save();
     } 
     
     public static void ChangeName(string newName)
     {
-        PlayerPrefs.SetString(Name, newName);
+        PlayerPrefs.SetString(NAME, newName);
+        PlayerPrefs.Save();
     }
 }

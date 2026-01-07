@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: 08f7580c2d16fbd438f4a71ac384bd62
+guid: a901f427964d52e4d8b9fffedc5b5315
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2503992082558401399
-    second: boom_0
+      213: -5858441059071933828
+    second: croak_0
+  - first:
+      213: 7642232484397315925
+    second: croak_1
+  - first:
+      213: 6984134191939967635
+    second: croak_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -178,13 +184,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: boom_0
+      name: croak_0
       rect:
         serializedVersion: 2
-        x: 87
-        y: 27
-        width: 77
-        height: 118
+        x: 35
+        y: 177
+        width: 178
+        height: 58
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -193,8 +199,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 77bb8494887ffb220800000000000000
-      internalID: 2503992082558401399
+      spriteID: c72447865e2a2bea0800000000000000
+      internalID: -5858441059071933828
       vertices: []
       indices: 
       edges: []
@@ -203,7 +209,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3cf23a63534250a478cf1775bc76f33c
+    spriteID: a0e3f97d7eee8074590774fcd491c002
     internalID: 0
     vertices: []
     indices: 
@@ -213,8 +219,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      boom_0: 2503992082558401399
-      boom_1: 518129304
+      croak_0: -5858441059071933828
+      croak_1: 7642232484397315925
+      croak_2: 6984134191939967635
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -32,6 +32,7 @@ internal class SettingsManager : MonoBehaviour
 
     public void OnNameChanged(string name)
     {
+        Debug.Log("Name changed");
         SettingsSingleton.ChangeName(name);
         _nameField.text = SettingsSingleton.PlayerName;
     }
