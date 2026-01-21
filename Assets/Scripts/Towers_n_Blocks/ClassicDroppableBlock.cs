@@ -37,16 +37,12 @@ internal class ClassicDroppableBlock : AbstractDroppableBlock
                 < other.GetComponent<BoxCollider2D>().bounds.extents.x * 0.25f;
     }
 
-    // В этом типе блоков идеальный мэтч отличается от обычного только плейсментом при попадании и анимацией
     private void PlaceOnTop(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(1, 0.5f);
         Transform t = Rigidbody.transform;
-        // вспомнил, что bounds.extents определяет bounding box коллайдера, а не его собственные размерности 
-        // заменил магическую константу определяющим ее размером объекта
         t.position = other.ClosestPoint(transform.position)
                                 + new Vector2(0, Collider.size.y * t.localScale.y / 2f);
-        // эффект отскакивания капибар при падении
         Image.transform.DOPunchPosition(Vector3.up, 1f, 2, 1f, false).SetEase(Ease.OutQuad);
     }
 

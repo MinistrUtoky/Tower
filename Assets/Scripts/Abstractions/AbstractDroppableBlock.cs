@@ -6,17 +6,13 @@ using UnityEngine.Events;
 [RequireComponent(typeof(BoxCollider2D))]
 internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
 {
-    // компонент, содержащий изображение блока
     [SerializeField]
     private SpriteRenderer _image;
 
-    // переделываю под Builder + DI для того, чтобы эффективно наследовать и кастомизировать
     protected UnityEvent<Collider2D> _onStack = new();
     protected UnityEvent<Collider2D> _onPerfectMatch = new();
     protected UnityEvent _onMiss  = new();
 
-    // Таким образом мы изолируем все основные компоненты шаблона в рамках класса DroppableBlock
-    // А вся кастомная функциональность отдельных блоков реализуется уже в наследниках этого класса
     protected ITower Tower { get; private set; }
     protected bool IsStacked { get; set; } = false;
 
@@ -34,7 +30,6 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
         _onPerfectMatch.AddListener(FreezeBlock);
     }
 
-    // Все блоки пока что застывают при накладывании. Возможно в будущем переедет в какой-то специальный подтип.
     private void FreezeBlock(Collider2D other)
     {
         IsStacked = true;
@@ -43,36 +38,24 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
         Rigidbody.transform.rotation = other.transform.rotation;
     }
 
-    // virtual потому что такая опция может понадобиться в случае расширения свойств спавна
-    // (допустим, захочу создать тикающую бомбу поставить ей спавн таймер - зачем ветвить методы если есть этот)
-    // ну а базовая имплементация универсальна - блок без башни жить не может
     public virtual void OnInit(ITower tower)
     {
-        // добавил вывод ошибки
         if (Tower != null)
         {
             Debug.LogError("The block cannot be initialized twice or have two towers as it's parent!");
             return;
         }
-        // Теперь если мы хотим строить башню "От себя" у нас есть такая возможность.
         if (InterplayData.Location.ReverseOverlap)
             Image.sortingOrder = (32699 - tower.TotalFloors) % 32700 + 3;
         else
             Image.sortingOrder = tower.TotalFloors % 32700 + 3;
         Tower = tower;
     }
-    // не все падающие блоки не застаканы по дефолту и падают с гравитацией 5
     public abstract void OnDrop();
 
-    // абстрагируем условие стака, чтобы можно было делать интересные подтипы матчей
     protected abstract bool CanStackOn(Collider2D other);
     protected abstract bool IsPerfect(Collider2D other);
     private void StackOn(Collider2D other) => _onStack.Invoke(other);
-
-    // Зачем отдельно идеальные метчи? Для разных блоков - забавные условия идеального выполнения.
-    // Это не всегда связано с попаданием. Для одних блоков идеальное условие -
-    // их уничтожение; для других - попасть в башню, но не на верхний этаж; и т.д.
-    // Более того не все они стакаются. Может захочется чтобы они как в мэтч-3 просто уничтожались.
     private void PerfectMatch(Collider2D other) => _onPerfectMatch.Invoke(other);
     private void Miss() => _onMiss.Invoke();
 

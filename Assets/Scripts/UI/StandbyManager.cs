@@ -18,7 +18,6 @@ internal class StandbyManager : MonoBehaviour
 
     private const int PAYWALL_AMOUNT = 10;
 
-    // Дефолтные настройки
     private void Start()
     {
         InterplayData.Default();
@@ -35,28 +34,17 @@ internal class StandbyManager : MonoBehaviour
         RefreshButtonsAvailability();
     }
 
-    /// <summary>
-    /// Так как кнопки в Unity воспринимают только события с 0-1 аргументами, 
-    /// то нужно два разных вызова для выбора сцены и числа игроков
-    /// </summary>
     public void ChangeSceneTo(string sceneName)
     {
         _lastSelectedScene = sceneName;
     }
 
-    /// <summary>
-    /// По нажатию начала игры мы открываем панель выбора числа игроков
-    /// </summary>
     public void OnMainMenuButtonClicked()
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
         _locationSelection.SetActive(true);
     }
-    /// <summary>
-    /// По нажатию числа игроков мы записываем это число в синглтон передачи данных 
-    /// (потому что PlayerPrefs имеет отвратительную систему индексации) 
-    /// И начинаем игру с нужными настройками (для графики пока плейсхолдер, а звук сам себе синглтон)
-    /// </summary>
+
     public void StartSelectedWith(int numberOfPlayers)
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
@@ -106,5 +94,4 @@ internal class StandbyManager : MonoBehaviour
             else 
                 break;
     }
-
 }

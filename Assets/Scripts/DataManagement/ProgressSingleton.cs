@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// Временное решение для сохранения прогрессии, дальше все перейдёт в БД. Так как билд под Android
-/// </summary>
 internal static class ProgressSingleton
 {
     [Serializable]

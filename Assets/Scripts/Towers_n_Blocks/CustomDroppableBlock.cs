@@ -21,7 +21,6 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
     public override void OnDrop()
     {
         IsStacked = false;
-        // Этот блок типо летит быстрееы
         Rigidbody.gravityScale = 10;
     }
 
@@ -39,13 +38,11 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
         Rigidbody.transform.position = other.ClosestPoint(transform.position)
                                 + new Vector2(0, Collider.size.y * Rigidbody.transform.localScale.y / 2f);
 
-        // Они растут! Как грибы!
         Rigidbody.transform.DOScale(1.9f, 0.5f)
                             .SetEase(Ease.Linear)
                             .SetLoops(4, LoopType.Yoyo); 
     }
 
-    // По плану добавить сюда двойные баллы для этого блока
     private void FixOnTower(Collider2D other)
     {
         Tower.Add(this);
@@ -61,7 +58,6 @@ internal class CustomDroppableBlock : AbstractDroppableBlock
         StartCoroutine(MissAnimation());
     }
 
-    // А сюда еще двойные двойные баллы
     private void PlacePerfectly(Collider2D other)
     {
         AudioSingleton.Instance.PlaySfx(3, 0.5f);

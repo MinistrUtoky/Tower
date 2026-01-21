@@ -9,7 +9,6 @@ internal class LoadingPanelDecoration : MonoBehaviour
         StartCoroutine(HideAfterLoading());
     }
 
-    // При открытии панели засекаем время и потом запускаем анимацию скрытия
     private IEnumerator HideAfterLoading()
     {
         yield return new WaitForSeconds(TConfig.LOADING_TIME);

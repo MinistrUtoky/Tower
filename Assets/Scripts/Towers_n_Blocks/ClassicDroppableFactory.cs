@@ -45,7 +45,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
 
     private BlockPresetScriptable _blocksPreset;
 
-    // Время начала покачивания башни
     private float _shakeStartTime;
     private bool _isShaking = false;
 
@@ -78,7 +77,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     {
         MoveCurrent();
         if (!TransitionManager.Instance.GameOn) return;
-        // Если игра началась разблокируем нажатие экрана по истечению загрузки
         if (_startGameTouchBlock > 0f)
         {
             _startGameTouchBlock -= Time.deltaTime;
@@ -103,20 +101,18 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
         _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF, 
                                                 _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
 
-        // заменил bounds.extents на size
-        // заменил магическую константу определяющим ее размером объекта
         float newHeight = -towerBlock.Collider.size.y * towerBlock.Collider.transform.localScale.y * (TotalFloors > 1 ? TotalFloors - 2 : 0);
-        // Фон перестает двигаться, как только башня достигает его вершины
+
         if (TotalFloors > TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT)
         {
             float newBackgroundHeight = towerBlock.Collider.size.y
                                             * towerBlock.Collider.transform.localScale.y
                                                 * (TotalFloors - TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT);
             _background.transform.parent.DOKill();
-            _background.transform.DOLocalMoveY(newBackgroundHeight, 1f); // движение должно быть локальным
+            _background.transform.DOLocalMoveY(newBackgroundHeight, 1f); 
         }
         _towerRoot.transform.parent.DOKill();
-        _towerRoot.transform.parent.DOLocalMoveY(newHeight, 1f); // теперь локальное
+        _towerRoot.transform.parent.DOLocalMoveY(newHeight, 1f); 
         _score.text = TotalFloors.ToString();
         _pendulum.SpeedUpPendulum();
         _cameraToSpawn.DOKill();
@@ -201,9 +197,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
                                                               _pendulum.transform.position.y);
     }
 
-    /// <summary>
-    /// Гармонические колебания башни, увеличивающиеся с ростом башни
-    /// </summary>
     private void ShakeTower()
     {       
         if (TotalFloors > TConfig.MIN_SHAKE_FLOORS)
@@ -218,9 +211,6 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
         }
     }
 
-    /// <summary>
-    /// Считает угол колебания в зависимости от высоты башни и пройденного временного промежутка
-    /// </summary>
     private static float GetShakeAngleFromTime(int totalFloors, float blockHeight, float shakeStartTime)
     {
         float globalScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
@@ -229,6 +219,5 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
         int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, totalFloors);
         float rotationAngleLimit = Mathf.Atan(absoluteMaxAngleTan) * Mathf.Rad2Deg * ((float)floorHeight) / ((float)TConfig.MAX_SHAKE_FLOORS);
         return Mathf.Sin((Time.time - shakeStartTime) * TConfig.SHAKE_SPEED) * rotationAngleLimit;
-    }
-    
+    }    
 }

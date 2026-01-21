@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -41,23 +41,18 @@ internal class CongratsManager : MonoBehaviour
             ShowFinale(InterplayData.PlayerCount == 2? _twoPlayerSetup : _singlePlayerSetup));
     }
 
-    /// <summary>
-    /// Экран завершения игры
-    /// </summary>
     private IEnumerator ShowFinale(EndgameSetup setup)
     {
         if (setup.twoPlayer)
             setup.winnerCongratsHolder.text = InterplayData.Player1Score >= InterplayData.Player2Score ?
-                                                                "Ура!\nПобедил Игрок 1" : "Ура!\nПобедил Игрок 2";
-        // Увеличиваем общие очки игроков
+                                                                "РЈСЂР°!\nРџРѕР±РµРґРёР» РРіСЂРѕРє 1" : "РЈСЂР°!\nРџРѕР±РµРґРёР» РРіСЂРѕРє 2";
+
         ProgressSingleton.IncreaseScoreBy(InterplayData.Player1Score + InterplayData.Player2Score);
         print("New Score: " + ProgressSingleton.Score);
 
-        // Собирается информация в зависимости от результата
         AssembleResultScreen(setup.player1Info, setup.twoPlayer ? setup.player2Info : null, InterplayData.Player1Score, InterplayData.Player2Score);
         setup.showScreen.SetActive(true);
 
-        // Ждем действия игрока и выключаем
         yield return new WaitForSeconds(1f);
         while (true)
         {
@@ -70,11 +65,6 @@ internal class CongratsManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    /// <summary>
-    /// Автоматически меняет размер очков результата и фон очков
-    /// в соответствии с полученным числом очков и в зависимости от того,
-    /// кто из игроков набрал больше
-    /// </summary>
     private static void AssembleResultScreen(PlayerEndgameInfo player1Card, PlayerEndgameInfo player2Card, int points1, int points2)
     {
         player1Card.resultHolder.text = points1.ToString();

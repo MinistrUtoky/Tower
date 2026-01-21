@@ -21,9 +21,6 @@ public class BlockPresetScriptable : ScriptableObject
         public readonly Sprite Image => _image;
         public readonly GameObject Prefab => _prefab;
 
-        /// <summary>
-        /// Доля в сумме весов определяет вероятность выпадения блока
-        /// </summary>
         public readonly float ProbabilityWeight => _probabilityWeight;
     }
 
@@ -38,7 +35,6 @@ public class BlockPresetScriptable : ScriptableObject
 
     public Sprite PendulumHolderImage => _pendulumHolderImage;
     public Sprite PendulumImage => _pendulumImage;
-    // Наслаиваются ли блоки спереди или сзади
     public bool ReverseOverlap => _reverseOverlap;
 
     internal Block RandomBlock()

@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Как писал в других комментариях - данный класс эффективно заменяет PlayerPrefs,
-/// потому что обращения через строчные названия это отвратительный 
-/// инженерный дизайн и легаси рудимент, за который Unity должно быть стыдно.
-/// </summary>
 public static class InterplayData
 {
     private static int _playerCount = 1;
@@ -55,5 +50,4 @@ public static class InterplayData
         _playerCount = 1;
         _selectedPreset = new();
     }
-
 }
