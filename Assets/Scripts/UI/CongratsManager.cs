@@ -47,8 +47,8 @@ internal class CongratsManager : MonoBehaviour
             setup.winnerCongratsHolder.text = InterplayData.Player1Score >= InterplayData.Player2Score ?
                                                                 "Ура!\nПобедил Игрок 1" : "Ура!\nПобедил Игрок 2";
 
-        ProgressSingleton.IncreaseScoreBy(InterplayData.Player1Score + InterplayData.Player2Score);
-        print("New Score: " + ProgressSingleton.Score);
+        ProgressSaveable.Instance.IncreaseScoreBy(InterplayData.Player1Score + InterplayData.Player2Score);
+        print("New Score: " + ProgressSaveable.Instance.Score);
 
         AssembleResultScreen(setup.player1Info, setup.twoPlayer ? setup.player2Info : null, InterplayData.Player1Score, InterplayData.Player2Score);
         setup.showScreen.SetActive(true);

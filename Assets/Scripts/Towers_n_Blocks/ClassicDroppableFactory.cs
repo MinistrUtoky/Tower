@@ -43,7 +43,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     [SerializeField]
     private TMP_Text _endgameResult;
 
-    private BlockPresetScriptable _blocksPreset;
+    private LocationPresetScriptable _blocksPreset;
 
     private float _shakeStartTime;
     private bool _isShaking = false;
@@ -183,7 +183,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     {
         Vector3 whereToSpawn = new Vector3(_pendulum.transform.position.x, _pendulum.transform.position.y);
 
-        BlockPresetScriptable.Block block = _blocksPreset.RandomBlock();
+        AbstractPresetScriptable.Block block = _blocksPreset.NextBlock();
         IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
                                                     .transform.GetChild(0).GetComponent<IDroppable>();
         droppable.Image.sprite = block.Image;

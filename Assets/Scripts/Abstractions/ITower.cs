@@ -1,5 +1,3 @@
-// Интерфейс обратной фабрики. Но есть нюанс
-
 internal interface ITower : IKillable
 {
     public abstract int TotalFloors { get; }

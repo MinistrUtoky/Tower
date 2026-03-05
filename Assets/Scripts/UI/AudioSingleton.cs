@@ -4,6 +4,7 @@
 internal class AudioSingleton : MonoBehaviour
 {
     public static AudioSingleton Instance { get; private set; }
+
     [SerializeField]
     private AudioClip[] availableSfx;
 
@@ -31,14 +32,14 @@ internal class AudioSingleton : MonoBehaviour
 
     private void Update()
     {
-        if (!_musicAso.isPlaying || SettingsSingleton.MusicLevelChanged)
+        if (!_musicAso.isPlaying || SettingsSaveable.Instance.MusicLevelChanged)
             PlayMusic(_backgroundMusic);
     }
 
     private void PlayMusic(AudioClip _clip)
     {
         _musicAso.clip = _clip;
-        _musicAso.volume = SettingsSingleton.MusicLevel;
+        _musicAso.volume = SettingsSaveable.Instance.MusicLevel;
         _musicAso.Play();
     }
 
@@ -46,14 +47,14 @@ internal class AudioSingleton : MonoBehaviour
     {
         if (sfxID == -1)
             sfxID = Random.Range(0, availableSfx.Length);
-        _oneshotAso.PlayOneShot(availableSfx[sfxID], vol * SettingsSingleton.SFXLevel);
+        _oneshotAso.PlayOneShot(availableSfx[sfxID], vol * SettingsSaveable.Instance.SFXLevel);
     }
 
     public void PlaySfxLooped(int sfxID, float volume)
     {
         _loopedAso.clip = availableSfx[sfxID];
         _loopedAso.loop = true;
-        _loopedAso.volume = volume * SettingsSingleton.SFXLevel;
+        _loopedAso.volume = volume * SettingsSaveable.Instance.SFXLevel;
 
         if (!_loopedAso.isPlaying)
             _loopedAso.Play();

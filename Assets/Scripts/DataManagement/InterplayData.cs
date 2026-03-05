@@ -6,7 +6,7 @@ public static class InterplayData
     private static int _player1Score = 0;
     private static int _player2Score = 0;
 
-    private static BlockPresetScriptable _selectedPreset = new();
+    private static LocationPresetScriptable _selectedPreset = new();
 
     public static int PlayerCount
     {
@@ -37,7 +37,7 @@ public static class InterplayData
         }
     }
 
-    public static BlockPresetScriptable Location 
+    internal static LocationPresetScriptable Location 
     {
         get => _selectedPreset;
         set { _selectedPreset = value; }

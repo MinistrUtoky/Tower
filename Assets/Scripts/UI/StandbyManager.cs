@@ -21,7 +21,7 @@ internal class StandbyManager : MonoBehaviour
     private void Start()
     {
         InterplayData.Default();
-        QualitySettings.SetQualityLevel(SettingsSingleton.QualityLevel, true);
+        QualitySettings.SetQualityLevel(SettingsSaveable.Instance.QualityLevel, true);
         _lastSelectedScene = SceneManager.GetActiveScene().name;
 
         for (int i = 0; i < _locationBlockers.Length; i++)
@@ -30,7 +30,7 @@ internal class StandbyManager : MonoBehaviour
             _locationBlockers[i].onClick.AddListener(() => TryUnlock(index));
         }
 
-        _debitBalance.text = "Score: " + ProgressSingleton.Score.ToString();
+        _debitBalance.text = "Score: " + ProgressSaveable.Instance.Score.ToString();
         RefreshButtonsAvailability();
     }
 
@@ -48,12 +48,12 @@ internal class StandbyManager : MonoBehaviour
     public void StartSelectedWith(int numberOfPlayers)
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
-        QualitySettings.SetQualityLevel(SettingsSingleton.QualityLevel, true);
+        QualitySettings.SetQualityLevel(SettingsSaveable.Instance.QualityLevel, true);
         InterplayData.PlayerCount = numberOfPlayers;
         SceneManager.LoadScene(_lastSelectedScene, LoadSceneMode.Single);
     }
 
-    public void PrepareLocation(BlockPresetScriptable preset)
+    public void PrepareLocation(LocationPresetScriptable preset)
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
         InterplayData.Location = preset;
@@ -64,11 +64,11 @@ internal class StandbyManager : MonoBehaviour
     private void TryUnlock(int index)
     {
         Debug.Log("Passed on index " + index + " for an unlock");
-        bool[] prev = ProgressSingleton.AvailableLevels;
+        bool[] prev = ProgressSaveable.Instance.AvailableLevels;
         if (index > prev.Length - 1)
             Debug.LogError("Index for an unlockable levels is out of bounds");
 
-        if (ProgressSingleton.TryDecreaseScoreBy(PAYWALL_AMOUNT))
+        if (ProgressSaveable.Instance.TryDecreaseScoreBy(PAYWALL_AMOUNT))
         {
             gameObject.SetActive(false);
             if (prev.Length != _locationBlockers.Length)
@@ -79,15 +79,15 @@ internal class StandbyManager : MonoBehaviour
                 prev = temp;
             }
             prev[index] = true;
-            ProgressSingleton.SaveOpenLevels(prev);
-            _debitBalance.text = "Score: " + ProgressSingleton.Score.ToString();
+            ProgressSaveable.Instance.SaveOpenLevels(prev);
+            _debitBalance.text = "Score: " + ProgressSaveable.Instance.Score.ToString();
             RefreshButtonsAvailability();
         }
     }
 
     private void RefreshButtonsAvailability()
     {
-        bool[] availability = ProgressSingleton.AvailableLevels;
+        bool[] availability = ProgressSaveable.Instance.AvailableLevels;
         for (int i = 0; i < _locationBlockers.Length; i++)
             if (i < availability.Length)
                 _locationBlockers[i].gameObject.SetActive(!availability[i]);

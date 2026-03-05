@@ -2,10 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-internal class SettingsManager : MonoBehaviour
+internal class SettingsManager : AbstractPanelManager
 {
-    [SerializeField]
-    private GameObject _settingsPanel;
     [SerializeField]
     private TMP_InputField _nameField;
     [SerializeField]
@@ -17,39 +15,28 @@ internal class SettingsManager : MonoBehaviour
 
     private void Start()
     {
-        _nameField.text = SettingsSingleton.PlayerName;
-        _music.value = SettingsSingleton.MusicLevel;
-        _sounds.value = SettingsSingleton.SFXLevel;
-       _qualityIndicator.text = SettingsSingleton.QualityLevelName;
-    }
-
-    public void OnSettingsButtonClicked()
-    {
-        AudioSingleton.Instance.PlaySfx(0, 0.5f);
-        _settingsPanel.SetActive(true);
+        _nameField.text = SettingsSaveable.Instance.PlayerName;
+        _music.value = SettingsSaveable.Instance.MusicLevel;
+        _sounds.value = SettingsSaveable.Instance.SFXLevel;
+       _qualityIndicator.text = SettingsSaveable.Instance.QualityLevelName;
     }
 
     public void OnNameChanged(string name)
     {
         Debug.Log("Name changed");
-        SettingsSingleton.ChangeName(name);
-        _nameField.text = SettingsSingleton.PlayerName;
+        SettingsSaveable.Instance.ChangeName(name);
+        _nameField.text = SettingsSaveable.Instance.PlayerName;
     }
 
     public void ChangeQuality(bool toBetter)
     {
         AudioSingleton.Instance.PlaySfx(0, 0.5f);
-        int currentQuality = SettingsSingleton.QualityLevel;
-        SettingsSingleton.SetQualityPreset(toBetter ? currentQuality + 1 : currentQuality - 1);
-        _qualityIndicator.text = SettingsSingleton.QualityLevelName;
+        int currentQuality = SettingsSaveable.Instance.QualityLevel;
+        SettingsSaveable.Instance.SetQualityPreset(toBetter ? currentQuality + 1 : currentQuality - 1);
+        _qualityIndicator.text = SettingsSaveable.Instance.QualityLevelName;
     }
 
-    public void OnSFXSlider(float value) => SettingsSingleton.SetSoundLevel(value);
-    public void OnMusicSlider(float value) => SettingsSingleton.SetMusicLevel(value);
+    public void OnSFXSlider(float value) => SettingsSaveable.Instance.SetSoundLevel(value);
+    public void OnMusicSlider(float value) => SettingsSaveable.Instance.SetMusicLevel(value);
 
-    public void CloseSettings()
-    {
-        AudioSingleton.Instance.PlaySfx(0, 0.5f);
-        _settingsPanel.SetActive(false);
-    }
 }
