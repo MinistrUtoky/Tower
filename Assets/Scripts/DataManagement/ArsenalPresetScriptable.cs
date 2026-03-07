@@ -1,5 +1,9 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine.UI;
 
 namespace Arsenal
 {
@@ -11,6 +15,26 @@ namespace Arsenal
         // + Меню выбора арсенала. Содержит блоки для сборки "руки", их описание и график роста вероятности выпадения с ходами. 
         // Планируется сквозная прогрессия за очки, как с уровнями.
 
+        [Serializable]
+        private class ArsenalBlock : Block {
+            [SerializeField]
+            private bool _isSelected = false;
+            [SerializeField]
+            private float _price;
+            [SerializeField]
+            private float[] _probabilitiesByTurn;
+
+            public float[] ProbabilitiesByTurn => _probabilitiesByTurn;
+            public bool IsSelected { get { return _isSelected; } set { _isSelected = value; } }
+        }
+        [Serializable]
+        private class ArrayWrapper<T> {
+            [SerializeField] private T[] _array;
+            public T[] Array => _array;
+            public ArrayWrapper(T[] arr) => _array = arr;            
+        }
+
+        private const string ARSENAL_SAVE_FILE_NAME = "YourArsenal.json";
 
         // Decorations for probability circle
         [SerializeField]
@@ -19,9 +43,49 @@ namespace Arsenal
         private TMP_Settings _probabilityTextSettings;
         [SerializeField]
         private ArsenalUIBlock _UIBlock;
+        [SerializeField]
+        private ArsenalUIBlock _UIBlockMini;
 
-        public GameObject UIPrefab => _UIBlock.gameObject;
+        [SerializeField]
+        private ArsenalBlock[] _arsenalBlocks;
 
-        public override Block NextBlock() => _blocks[Random.Range(0, _blocks.Length)];
+        public override IEnumerable<IBlock> Blocks => _arsenalBlocks;
+        public override IBlock NextBlock() => _arsenalBlocks[UnityEngine.Random.Range(0, _arsenalBlocks.Length)];
+        public void FillUpContent(Transform shopSection, Transform inventorySection)
+        {
+            LoadArsenalPreset();
+            foreach (ArsenalBlock block in _arsenalBlocks)
+            {
+                ArsenalUIBlock mainUIBlock = Instantiate(_UIBlock.gameObject, shopSection).GetComponent<ArsenalUIBlock>();
+                ArsenalUIBlock miniUIBlock = Instantiate(_UIBlockMini.gameObject, inventorySection).GetComponent<ArsenalUIBlock>();
+                miniUIBlock.gameObject.SetActive(block.IsSelected);
+                mainUIBlock.GetComponent<Button>().enabled = !block.IsSelected;
+                miniUIBlock.Init(() => Switch(block, mainUIBlock, miniUIBlock), block.Image, block.Name, block.ProbabilitiesByTurn);
+                mainUIBlock.Init(() => Switch(block, mainUIBlock, miniUIBlock),  block.Image, block.Name, block.ProbabilitiesByTurn);
+            }
+        }
+
+        private static void Switch(ArsenalBlock realBlock, ArsenalUIBlock mainBlock, ArsenalUIBlock miniBlock)
+        {
+            realBlock.IsSelected = !realBlock.IsSelected;
+            miniBlock.gameObject.SetActive(realBlock.IsSelected);
+            mainBlock.GetComponent<Button>().enabled = !realBlock.IsSelected;
+            Canvas.ForceUpdateCanvases();
+        }
+
+        private void LoadArsenalPreset()
+        {
+            string path = Path.Combine(Application.streamingAssetsPath, ARSENAL_SAVE_FILE_NAME);
+            string json = File.ReadAllText(path);
+            ArrayWrapper<ArsenalBlock> arsenal = JsonUtility.FromJson<ArrayWrapper<ArsenalBlock>>(json);
+            _arsenalBlocks = arsenal.Array;
+        }
+
+        public void SavePresetAsJson()
+        {
+            string path = Path.Combine(Application.streamingAssetsPath, ARSENAL_SAVE_FILE_NAME); ;
+            string json = JsonUtility.ToJson(new ArrayWrapper<ArsenalBlock>(_arsenalBlocks));
+            File.WriteAllText(path, json);
+        }
     }
 }

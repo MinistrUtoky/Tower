@@ -5,8 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AbstractPresetScriptable", menuName = "Scriptable Objects/AbstractPresetScriptable")]
 internal abstract class AbstractPresetScriptable : ScriptableObject
 {
+    public interface IBlock
+    {
+        public string Name { get; }
+        public Sprite Image { get; }
+        public GameObject Prefab { get; }
+    }
+
     [Serializable]
-    internal struct Block
+    public class Block : IBlock
     {
         [SerializeField]
         private string _name;
@@ -14,21 +21,11 @@ internal abstract class AbstractPresetScriptable : ScriptableObject
         private Sprite _image;
         [SerializeField]
         private GameObject _prefab;
-        [SerializeField]
-        private float _probabilityWeight;
-        [SerializeField]
-        private float[] _probabilitiesByTurn;
-
-        public readonly string Name => _name;
-        public readonly Sprite Image => _image;
-        public readonly GameObject Prefab => _prefab;
-        public readonly float ProbabilityWeight => _probabilityWeight;
-        public readonly float[] ProbabilitiesByTurn => _probabilitiesByTurn;
+        public string Name => _name;
+        public Sprite Image => _image;
+        public GameObject Prefab => _prefab;
     }
-    [SerializeField]
-    protected Block[] _blocks;
 
-    public IEnumerable<Block> Blocks => _blocks;
-
-    public abstract Block NextBlock();
+    public abstract IEnumerable<IBlock> Blocks { get; }
+    public abstract IBlock NextBlock();
 }

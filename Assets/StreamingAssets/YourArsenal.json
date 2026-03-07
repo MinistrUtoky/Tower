@@ -1,0 +1,44 @@
+{
+  "_array": [
+    {
+      "_name": "NoAirCondition",
+      "_image": { "instanceID": 53076 },
+      "_prefab": { "instanceID": 53078 },
+      "_isSelected": false,
+      "_price": 0.0,
+      "_probabilitiesByTurn": []
+    },
+    {
+      "_name": "YesAirCondition",
+      "_image": { "instanceID": 53080 },
+      "_prefab": { "instanceID": 53082 },
+      "_isSelected": false,
+      "_price": 0.0,
+      "_probabilitiesByTurn": []
+    },
+    {
+      "_name": "Pink",
+      "_image": { "instanceID": 53084 },
+      "_prefab": { "instanceID": 53064 },
+      "_isSelected": false,
+      "_price": 0.0,
+      "_probabilitiesByTurn": []
+    },
+    {
+      "_name": "Violet",
+      "_image": { "instanceID": 53086 },
+      "_prefab": { "instanceID": 53068 },
+      "_isSelected": true,
+      "_price": 0.0,
+      "_probabilitiesByTurn": []
+    },
+    {
+      "_name": "Bomb",
+      "_image": { "instanceID": 53070 },
+      "_prefab": { "instanceID": 53072 },
+      "_isSelected": true,
+      "_price": 0.0,
+      "_probabilitiesByTurn": []
+    }
+  ]
+}

@@ -183,7 +183,7 @@ internal class ClassicDroppableFactory : AbstractDroppableFactory
     {
         Vector3 whereToSpawn = new Vector3(_pendulum.transform.position.x, _pendulum.transform.position.y);
 
-        AbstractPresetScriptable.Block block = _blocksPreset.NextBlock();
+        AbstractPresetScriptable.IBlock block = _blocksPreset.NextBlock();
         IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
                                                     .transform.GetChild(0).GetComponent<IDroppable>();
         droppable.Image.sprite = block.Image;

@@ -12,11 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f06097b99fd4941a8550f1e0ffa8bc, type: 3}
   m_Name: BabylonBlockSet
   m_EditorClassIdentifier: 
+  _blocks:
+  - _name: NoAirCondition
+    _image: {fileID: 5738468995420484106, guid: 2b7a81059a0489147ae6064d9a68c82f,
+      type: 3}
+    _prefab: {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29,
+      type: 3}
+  - _name: YesAirCondition
+    _image: {fileID: 5559667929427957976, guid: 89cd2e570a05cc54dbed04305b61b741,
+      type: 3}
+    _prefab: {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950,
+      type: 3}
+  - _name: Pink
+    _image: {fileID: 7730478372224141104, guid: 4e99e443c28d3a440bdb2565536dabdd,
+      type: 3}
+    _prefab: {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8,
+      type: 3}
+  - _name: Violet
+    _image: {fileID: -2801409215071612346, guid: 94c6ca2aa61f72843a49361b30fbcb96,
+      type: 3}
+    _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
+      type: 3}
   _pendulumHolderImage: {fileID: 5738468995420484106, guid: 2b7a81059a0489147ae6064d9a68c82f,
     type: 3}
   _pendulumImage: {fileID: 5738468995420484106, guid: 2b7a81059a0489147ae6064d9a68c82f,
     type: 3}
-  _blocks:
+  _reverseOverlap: 1
+  _locationBlocks:
   - _name: NoAirCondition
     _image: {fileID: 5738468995420484106, guid: 2b7a81059a0489147ae6064d9a68c82f,
       type: 3}
@@ -41,4 +63,3 @@ MonoBehaviour:
     _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
       type: 3}
     _probabilityWeight: 1
-  _reverseOverlap: 1

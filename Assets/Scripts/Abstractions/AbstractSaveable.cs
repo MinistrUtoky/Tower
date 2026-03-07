@@ -10,14 +10,12 @@ public abstract class AbstractSaveable<T> : MonoBehaviour where T : MonoBehaviou
     {
         get
         {
-            if (m_ShuttingDown)
-            {
-                Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
-                                 "' already destroyed. Returning null.");
+            if (m_ShuttingDown) {
+                Debug.LogWarning(
+                    string.Format($"[Singleton] Instance '{0}' already destroyed. Returning null.", typeof(T)));
                 return null;
             }
-
-            lock (m_Lock)
+            lock (m_Lock) 
             {
                 if (m_Instance == null)
                 {
@@ -26,27 +24,15 @@ public abstract class AbstractSaveable<T> : MonoBehaviour where T : MonoBehaviou
                     {
                         var singletonObject = new GameObject();
                         m_Instance = singletonObject.AddComponent<T>();
-                        singletonObject.name = typeof(T).ToString() + " (Singleton)";
                         DontDestroyOnLoad(singletonObject);
                     }
                 }
-
                 return m_Instance;
             }
         }
     }
-
-    private void OnApplicationQuit()
-    {
-        m_ShuttingDown = true;
-    }
-
-    private void OnDestroy()
-    {
-        if (m_Instance == this)
-            m_ShuttingDown = true;
-    }
-
+    private void OnApplicationQuit() => m_ShuttingDown = true;   
+    private void OnDestroy() { if (m_Instance == this) m_ShuttingDown = true; }
     protected void Save(string name, string value)
     {
         Debug.Log(name + " is set to " + value);
