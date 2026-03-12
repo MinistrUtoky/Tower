@@ -24,38 +24,63 @@ MonoBehaviour:
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29,
       type: 3}
-    _available: 0
+    _isSelected: 1
     _price: 0
-    _probabilitiesByTurn: []
+    _probabilitiesByTurn:
+    - 0.1
+    - 0.2
+    - 0.4
+    - 0.7
+    - 1
   - _name: YesAirCondition
     _image: {fileID: 5559667929427957976, guid: 89cd2e570a05cc54dbed04305b61b741,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950,
       type: 3}
-    _available: 0
+    _isSelected: 0
     _price: 0
-    _probabilitiesByTurn: []
+    _probabilitiesByTurn:
+    - 0.1
+    - 0.2
+    - 0.4
+    - 0.7
+    - 1
   - _name: Pink
     _image: {fileID: 7730478372224141104, guid: 4e99e443c28d3a440bdb2565536dabdd,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8,
       type: 3}
-    _available: 0
+    _isSelected: 0
     _price: 0
-    _probabilitiesByTurn: []
+    _probabilitiesByTurn:
+    - 0.1
+    - 0.2
+    - 0.4
+    - 0.7
+    - 1
   - _name: Violet
     _image: {fileID: -2801409215071612346, guid: 94c6ca2aa61f72843a49361b30fbcb96,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
       type: 3}
-    _available: 0
+    _isSelected: 1
     _price: 0
-    _probabilitiesByTurn: []
+    _probabilitiesByTurn:
+    - 0.1
+    - 0.2
+    - 0.4
+    - 0.7
+    - 1
   - _name: Bomb
     _image: {fileID: 2503992082558401399, guid: 08f7580c2d16fbd438f4a71ac384bd62,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: 63de2c64662e9d44f9181a0883bb28a3,
       type: 3}
-    _available: 0
+    _isSelected: 0
     _price: 0
-    _probabilitiesByTurn: []
+    _probabilitiesByTurn:
+    - 0.1
+    - 0.2
+    - 0.4
+    - 0.7
+    - 1

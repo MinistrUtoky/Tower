@@ -17,6 +17,8 @@ internal class PendulumPhysical : MonoBehaviour
 
     private float _swingTime = 2f;
 
+    public Vector3 Position => new Vector3(transform.position.x, transform.position.y);
+
     private void Start()
     {
         _pendulumTweener = _rb.transform.DOLocalRotate(new Vector3(0, 0, _maxAngle), _swingTime)

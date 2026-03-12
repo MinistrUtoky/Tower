@@ -24,6 +24,7 @@ public abstract class AbstractSaveable<T> : MonoBehaviour where T : MonoBehaviou
                     {
                         var singletonObject = new GameObject();
                         m_Instance = singletonObject.AddComponent<T>();
+                        singletonObject.name = typeof(T).ToString() + " (Singleton)";
                         DontDestroyOnLoad(singletonObject);
                     }
                 }

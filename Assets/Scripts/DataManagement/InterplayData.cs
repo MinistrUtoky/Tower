@@ -1,3 +1,4 @@
+using Arsenal;
 using UnityEngine;
 
 public static class InterplayData
@@ -6,7 +7,8 @@ public static class InterplayData
     private static int _player1Score = 0;
     private static int _player2Score = 0;
 
-    private static LocationPresetScriptable _selectedPreset = new();
+    private static LocationPresetScriptable _location = new();
+    private static ArsenalPresetScriptable _arsenal = new();
 
     public static int PlayerCount
     {
@@ -37,10 +39,13 @@ public static class InterplayData
         }
     }
 
-    internal static LocationPresetScriptable Location 
+    public static LocationPresetScriptable Location => _location;
+    public static ArsenalPresetScriptable Arsenal => _arsenal;
+
+    public static void NextPlayPreset(LocationPresetScriptable location, 
+                                      ArsenalPresetScriptable arsenal)
     {
-        get => _selectedPreset;
-        set { _selectedPreset = value; }
+        _location = location; _arsenal = arsenal;
     }
 
     public static void Default()
@@ -48,6 +53,7 @@ public static class InterplayData
         _player1Score = 0;
         _player2Score = 0;
         _playerCount = 1;
-        _selectedPreset = new();
+        _location = new();
+        _arsenal = new();
     }
 }

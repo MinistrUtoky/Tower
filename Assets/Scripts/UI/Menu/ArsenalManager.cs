@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static AbstractPresetScriptable;
 
 namespace Arsenal
 {
@@ -15,15 +14,17 @@ namespace Arsenal
 
         [SerializeField]
         private ArsenalPresetScriptable _arsenalPreset;
+
+        public static ArsenalPresetScriptable ArsenalPreset { get; private set; }
         
         private void Awake()
         {
             _arsenalPreset.FillUpContent(_arsenalShopContent, _yourArsenalContent);
+            ArsenalPreset = _arsenalPreset;
             Canvas.ForceUpdateCanvases();
         }
 
         public void Save() => _arsenalPreset.SavePresetAsJson();
-
 
         public void CloseBlockInfo() => SetActive(_infoPopup.gameObject, false);
         public void OpenBlockInfo() => SetActive(_infoPopup.gameObject, true);

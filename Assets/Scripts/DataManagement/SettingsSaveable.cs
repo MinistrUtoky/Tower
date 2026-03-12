@@ -4,11 +4,6 @@ using UnityEngine;
 
 internal class SettingsSaveable : AbstractSaveable<SettingsSaveable>
 {
-    private const string NAME = "PlayerName";
-    private const string MUSIC = "Music";
-    private const string SOUNDFX = "SoundFX";
-    private const string QUALITY = "QualityPreset";
-
     private static string RandomHash
     {
         get
@@ -18,16 +13,15 @@ internal class SettingsSaveable : AbstractSaveable<SettingsSaveable>
             return BitConverter.ToString(bytes);
         }
     }
-
     public string PlayerName { 
         get { 
-            string name = Get(NAME); 
+            string name = Get(MConfig.NAME); 
             return name == ""? "Player" + RandomHash : name; 
         } 
     }
-    public float MusicLevel => GetFloat(MUSIC);
-    public float SFXLevel => GetFloat(SOUNDFX);
-    public int QualityLevel => GetInt(QUALITY);
+    public float MusicLevel => GetFloat(MConfig.MUSIC);
+    public float SFXLevel => GetFloat(MConfig.SOUNDFX);
+    public int QualityLevel => GetInt(MConfig.QUALITY);
     public string QualityLevelName
     {
         get
@@ -52,18 +46,18 @@ internal class SettingsSaveable : AbstractSaveable<SettingsSaveable>
 
     public void SetMusicLevel(float newLevel)
     {
-        Save(MUSIC, Math.Min(1f, Math.Max(0f, newLevel)).ToString());
+        Save(MConfig.MUSIC, Math.Min(1f, Math.Max(0f, newLevel)).ToString());
         _musicLevelChanged = true;
     } 
-    public void SetSoundLevel(float newLevel) => Save(SOUNDFX, Math.Min(1f, Math.Max(0f, newLevel)).ToString());
+    public void SetSoundLevel(float newLevel) => Save(MConfig.SOUNDFX, Math.Min(1f, Math.Max(0f, newLevel)).ToString());
     public void SetQualityPreset(int preset)
     {
         if (QualitySettings.names.Length - 1 < preset)
             preset = 0;
         else if (preset < 0)
             preset = QualitySettings.names.Length - 1;
-        Save(QUALITY, preset.ToString());
+        Save(MConfig.QUALITY, preset.ToString());
     } 
     
-    public void ChangeName(string newName) => Save(NAME, newName);
+    public void ChangeName(string newName) => Save(MConfig.NAME, newName);
 }

@@ -4055,20 +4055,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 693508408}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2083525554}
-        m_TargetAssemblyTypeName: StandbyManager, Assembly-CSharp
-        m_MethodName: PrepareLocation
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 0a0b07218b20dc24da40169b3e666cd3,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: LocationPresetScriptable, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &693508408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9293,20 +9280,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1801703151}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2083525554}
-        m_TargetAssemblyTypeName: StandbyManager, Assembly-CSharp
-        m_MethodName: PrepareLocation
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: c571d67ae70b9b54abc5298a71ab1a04,
-            type: 2}
-          m_ObjectArgumentAssemblyTypeName: LocationPresetScriptable, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1801703151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10390,9 +10364,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb08dd594b7ffcc418e876c86f696135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _panel: {fileID: 0}
   _locationSelection: {fileID: 856210675}
-  _locationBlockers:
-  - {fileID: 1793357850}
+  _locations:
+  - _locationButton: {fileID: 1801703150}
+    _locationBlocker: {fileID: 0}
+    _locationPreset: {fileID: 11400000, guid: c571d67ae70b9b54abc5298a71ab1a04, type: 2}
+  - _locationButton: {fileID: 693508407}
+    _locationBlocker: {fileID: 1793357850}
+    _locationPreset: {fileID: 11400000, guid: 0a0b07218b20dc24da40169b3e666cd3, type: 2}
   _playerCountSelection: {fileID: 611735384}
   _debitBalance: {fileID: 1269827271}
 --- !u!1 &2097134610

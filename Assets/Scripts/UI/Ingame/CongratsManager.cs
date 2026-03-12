@@ -31,8 +31,6 @@ internal class CongratsManager : MonoBehaviour
     [SerializeField]
     private EndgameSetup _twoPlayerSetup;
 
-    private const int SCORE_FONT_SIZE = 260;
-
     private void Awake()
     {
         if (AudioSingleton.Instance)
@@ -68,14 +66,14 @@ internal class CongratsManager : MonoBehaviour
     private static void AssembleResultScreen(PlayerEndgameInfo player1Card, PlayerEndgameInfo player2Card, int points1, int points2)
     {
         player1Card.resultHolder.text = points1.ToString();
-        player1Card.resultHolder.fontSize = Mathf.Min(SCORE_FONT_SIZE * 2f / player1Card.resultHolder.text.Length, SCORE_FONT_SIZE);
+        player1Card.resultHolder.fontSize = Mathf.Min(MConfig.SCORE_FONT_SIZE * 2f / player1Card.resultHolder.text.Length, MConfig.SCORE_FONT_SIZE);
         if (player2Card != null)
         {
             player1Card.resultHolder.transform.localPosition = new Vector3(player1Card.resultHolder.transform.localPosition.x,
                                                                             Mathf.Max(10f * (player1Card.resultHolder.text.Length - 2), 0f) - 20f,
                                                                             player1Card.resultHolder.transform.localPosition.z);
             player2Card.resultHolder.text = points2.ToString();
-            player2Card.resultHolder.fontSize = Mathf.Min(SCORE_FONT_SIZE * 2f / player2Card.resultHolder.text.Length, SCORE_FONT_SIZE);
+            player2Card.resultHolder.fontSize = Mathf.Min(MConfig.SCORE_FONT_SIZE * 2f / player2Card.resultHolder.text.Length, MConfig.SCORE_FONT_SIZE);
             player2Card.resultHolder.transform.localPosition = new Vector3(player1Card.resultHolder.transform.localPosition.x,
                                                                             Mathf.Max(10f * (player1Card.resultHolder.text.Length - 2), 0f) - 20f,
                                                                             player1Card.resultHolder.transform.localPosition.z);

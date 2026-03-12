@@ -1,223 +1,148 @@
-using DG.Tweening;
-using TMPro;
+using Arsenal;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.UI;
 
-
-internal class ClassicDroppableFactory : AbstractDroppableFactory
+namespace Tower
 {
-    public enum ScreenRelation
+    internal class ClassicDroppableFactory : AbstractDroppableFactory
     {
-        Full,
-        LeftHalf,
-        RightHalf
-    }
-    [Header("Gameplay")]
-    [SerializeField]
-    private ScreenRelation _clickScreenPart = ScreenRelation.Full;
-    [SerializeField]
-    private Transform _towerRoot;
-    [SerializeField]
-    private PendulumPhysical _pendulum;
-    [SerializeField]
-    private Camera _cameraToSpawn;
-    [SerializeField]
-    private Canvas _background;
+        [Header("Gameplay")]
+        [SerializeField]
+        private ScreenRelation _clickScreenPart = ScreenRelation.Full;
+        [SerializeField]
+        private Transform _towerRoot;
+        [SerializeField]
+        private PendulumPhysical _pendulum;
 
-    [Header("UI")]
-    [SerializeField]
-    private TMP_Text _score;
-    [SerializeField]
-    private Image _heartsBG;
-    [SerializeField]
-    private Image[] _hearts;
-    [SerializeField]
-    private Image _pendulumVisual;
-    [SerializeField]
-    private Image _pendulumHolderVisual;
+        [Header("UI")]
+        [SerializeField]
+        private TowerVisualsController _visualsController;
 
-    [Header("Endgame")]
-    [SerializeField]
-    private GameObject _banner;
-    [SerializeField]
-    private TMP_Text _endgameResult;
+        private float _shakeStartTime;
+        private bool _isShaking = false;
 
-    private LocationPresetScriptable _blocksPreset;
+        private int _hp = 3;
 
-    private float _shakeStartTime;
-    private bool _isShaking = false;
+        private float _awaitStart = TConfig.LOADING_TIME;
 
-    private int _hp = 3;
+        private ArsenalBlock _lastArsenalBlock;
+        private int _nextProbabilityIndex = 0;
 
-    private float _currentScreenWidthCoef = 1f;
-    private float _baseCameraOrthoWidth;
+        private bool ScreenPartTouched => _clickScreenPart == ScreenRelation.Full
+                                          || _clickScreenPart == ScreenRelation.BottomHalf & Input.touches[0].position.y > Screen.height / 2f
+                                          || _clickScreenPart == ScreenRelation.TopHalf & Input.touches[0].position.y <= Screen.height / 2f;
 
-    private float _startGameTouchBlock = TConfig.LOADING_TIME;
-
-    private void Awake()
-    {
-        _baseCameraOrthoWidth = _cameraToSpawn.orthographicSize;
-    }
-
-    protected new void Start()
-    {
-        base.Start();
-        Assert.IsNotNull(TransitionManager.Instance);
-        Assert.IsNotNull(_towerRoot);
-        Assert.IsNotNull(_pendulum);
-        _blocksPreset = InterplayData.Location;
-        _pendulumVisual.sprite = _blocksPreset.PendulumImage;
-        _pendulumHolderVisual.sprite = _blocksPreset.PendulumHolderImage;
-        SpawnRandomDroppable();
-        _startGameTouchBlock = TConfig.LOADING_TIME;
-    }
-
-    private void Update()
-    {
-        MoveCurrent();
-        if (!TransitionManager.Instance.GameOn) return;
-        if (_startGameTouchBlock > 0f)
+        protected new void Start()
         {
-            _startGameTouchBlock -= Time.deltaTime;
-            return;
+            base.Start();
+            Assert.IsNotNull(TransitionManager.Instance);
+            Assert.IsNotNull(_towerRoot);
+            Assert.IsNotNull(_pendulum);
+            Assert.IsNotNull(_visualsController);
+            _visualsController.RedecoratePendulum(InterplayData.Location.PendulumImage, InterplayData.Location.PendulumHolderImage);
+            _awaitStart = TConfig.LOADING_TIME;
+            SpawnRandomDroppable();
         }
 
-        if (IsAlive & IsHanging & Input.touchCount > 0)
+        private void Update()
         {
-            if (_clickScreenPart == ScreenRelation.Full
-                || _clickScreenPart == ScreenRelation.LeftHalf & Input.touches[0].position.y > Screen.height / 2f
-                || _clickScreenPart == ScreenRelation.RightHalf & Input.touches[0].position.y <= Screen.height / 2f)
-                DropCurrent();
-        }
-        if (Current != null)
-            ShakeTower();
-    }
+            if (IsHanging)
+                Current.Collider.transform.position = _pendulum.Position;
 
-    public override void Add(IDroppable towerBlock)
-    {
-        base.Add(towerBlock);
-        towerBlock.Collider.transform.parent.parent = _towerRoot;
-        _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF, 
-                                                _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
+            if (!TransitionManager.Instance.GameOn) return;
 
-        float newHeight = -towerBlock.Collider.size.y * towerBlock.Collider.transform.localScale.y * (TotalFloors > 1 ? TotalFloors - 2 : 0);
-
-        if (TotalFloors > TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT)
-        {
-            float newBackgroundHeight = towerBlock.Collider.size.y
-                                            * towerBlock.Collider.transform.localScale.y
-                                                * (TotalFloors - TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT);
-            _background.transform.parent.DOKill();
-            _background.transform.DOLocalMoveY(newBackgroundHeight, 1f); 
-        }
-        _towerRoot.transform.parent.DOKill();
-        _towerRoot.transform.parent.DOLocalMoveY(newHeight, 1f); 
-        _score.text = TotalFloors.ToString();
-        _pendulum.SpeedUpPendulum();
-        _cameraToSpawn.DOKill();
-        _cameraToSpawn.DOOrthoSize(_currentScreenWidthCoef * _baseCameraOrthoWidth, 1f);
-    }
-
-    public override void RemoveTopmost()
-    {
-        base.RemoveTopmost();
-        _currentScreenWidthCoef = Mathf.Min(TConfig.MAX_SCREEN_WIDTH_COEF,
-                                                _currentScreenWidthCoef + TConfig.SCREEN_WIDTH_INCREMENT);
-
-        float newHeight = -Current.Collider.size.y * Current.Collider.transform.localScale.y * (TotalFloors > 1 ? TotalFloors - 2 : 0);
-
-        if (TotalFloors > TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT)
-        {
-            float newBackgroundHeight = Current.Collider.size.y
-                                            * Current.Collider.transform.localScale.y
-                                                * (TotalFloors - TConfig.BACKGROUND_BLOCK_HEIGHT_LIMIT);
-            _background.transform.parent.DOKill();
-            _background.transform.DOLocalMoveY(newBackgroundHeight, 1f); 
-        }
-        _towerRoot.transform.parent.DOKill();
-        _towerRoot.transform.parent.DOLocalMoveY(newHeight, 1f); 
-        _score.text = TotalFloors.ToString();
-        _pendulum.SpeedUpPendulum();
-        _cameraToSpawn.DOKill();
-        _cameraToSpawn.DOOrthoSize(_currentScreenWidthCoef * _baseCameraOrthoWidth, 1f);
-    }
-
-    public override void TakeHit()
-    {
-        if (_hp < 1) return;
-        _hp -= 1;
-        Destroy(_hearts[_hp]);
-        _heartsBG.DOKill();
-        _heartsBG.DOFade(0, 0.2f)
-                    .SetEase(Ease.Linear)
-                    .SetLoops(4, LoopType.Yoyo);
-        if (_hp < 1)
-        {
-            Die();
-            return;
-        }
-
-        for (int i = 0; i < _hp; i++)
-        {
-            _hearts[i].DOKill();
-            _hearts[i].DOFade(0, 0.2f)
-                        .SetEase(Ease.Linear)
-                        .SetLoops(4, LoopType.Yoyo);
-        }
-    }
-
-    public override void Die()
-    {
-        base.Die();
-        if (_clickScreenPart == ScreenRelation.RightHalf)
-            InterplayData.Player2Score = TotalFloors;
-        else
-            InterplayData.Player1Score = TotalFloors;
-        if (_endgameResult != null)
-            _endgameResult.text = TotalFloors.ToString();
-        TransitionManager.Instance.KillPlayer(_banner, 1f);
-    }
-
-    public override void SpawnRandomDroppable()
-    {
-        Vector3 whereToSpawn = new Vector3(_pendulum.transform.position.x, _pendulum.transform.position.y);
-
-        AbstractPresetScriptable.IBlock block = _blocksPreset.NextBlock();
-        IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
-                                                    .transform.GetChild(0).GetComponent<IDroppable>();
-        droppable.Image.sprite = block.Image;
-        base.SpawnDroppable(droppable);
-    }
-
-    private void MoveCurrent()
-    {
-        if (IsHanging)
-            Current.Collider.transform.position = new Vector3(_pendulum.transform.position.x,
-                                                              _pendulum.transform.position.y);
-    }
-
-    private void ShakeTower()
-    {       
-        if (TotalFloors > TConfig.MIN_SHAKE_FLOORS)
-        {
-            if (!_isShaking)
+            if (_awaitStart > 0f)
             {
-                _shakeStartTime = Time.time;
-                _isShaking = true;
+                _awaitStart -= Time.deltaTime;
+                return;
             }
-            float currentShakeAngle = GetShakeAngleFromTime(TotalFloors, Current.Collider.size.y, _shakeStartTime);
-            _towerRoot.rotation = Quaternion.Euler(new Vector3(0, 0, currentShakeAngle));
+            if (IsAlive & IsHanging & Input.touchCount > 0)
+                if (ScreenPartTouched) DropCurrent();
+
+            if (Current != null)
+            {
+                if (TotalFloors > TConfig.MIN_SHAKE_FLOORS)
+                {
+                    if (!_isShaking)
+                    {
+                        _shakeStartTime = Time.time;
+                        _isShaking = true;
+                    }
+                    _towerRoot.rotation = TConfig.ShakeAngleFromTime(TotalFloors, Current.Collider.size.y, _shakeStartTime);
+                }
+            }
+        }
+
+        public override void Add(IDroppable towerBlock)
+        {
+            base.Add(towerBlock);
+            towerBlock.Collider.transform.parent.parent = _towerRoot;
+            _visualsController.RefreshTower(towerBlock, _towerRoot, TotalFloors);
+            _pendulum.SpeedUpPendulum();
+        }
+
+        public override void RemoveTopmost()
+        {
+            base.RemoveTopmost();
+            _visualsController.RefreshTower(Current, _towerRoot, TotalFloors);
+            _pendulum.SpeedUpPendulum();
+        }
+        
+        public override void TakeHit()
+        {
+            if (_hp < 1) return;
+            _hp -= 1;
+            if (_hp < 1) Die();
+            else 
+                _visualsController.UpdateHP(_hp);
+        }
+
+        public override void Die()
+        {
+            base.Die();
+            _visualsController.CallOnDeathBanner(_clickScreenPart, TotalFloors);
+        }
+
+        public override void SpawnRandomDroppable()
+        {
+            Vector3 whereToSpawn = _pendulum.Position;
+            IBlock block = NextBlock();            
+            IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
+                                                        .transform.GetChild(0).GetComponent<IDroppable>();
+            droppable.Image.sprite = block.Image;
+            base.SpawnDroppable(droppable);
+        }
+
+        private IBlock NextBlock()
+        {
+            if (_lastArsenalBlock == null)
+            {
+                _nextProbabilityIndex = 0;
+                _lastArsenalBlock = InterplayData.Arsenal.NextBlock();
+                _visualsController.NewProbability(_lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex]);
+                _visualsController.NewArsenalBlock(_lastArsenalBlock.Image);
+                return InterplayData.Location.NextBlock();
+            }
+            if (_lastArsenalBlock.ProbabilitiesByTurn.Length == 0) return InterplayData.Location.NextBlock();
+
+            IBlock block;
+            if (Random.Range(0f, 1f) < _lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex])
+            {
+                block = _lastArsenalBlock;
+                _lastArsenalBlock = InterplayData.Arsenal.NextBlock();
+                _nextProbabilityIndex = 0;
+                _visualsController.NewProbability(_lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex]);
+                _visualsController.NewArsenalBlock(_lastArsenalBlock.Image);
+            }
+            else
+            {
+                _nextProbabilityIndex = Mathf.Min(_nextProbabilityIndex + 1, _lastArsenalBlock.ProbabilitiesByTurn.Length - 1);
+                _visualsController.NewProbability(_lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex]);
+                block = InterplayData.Location.NextBlock();
+            }
+
+
+            return block;
         }
     }
-
-    private static float GetShakeAngleFromTime(int totalFloors, float blockHeight, float shakeStartTime)
-    {
-        float globalScreenWidth = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, 0)).x - Camera.main.ScreenToWorldPoint(Vector3.zero).x;
-        float absoluteMaxTowerHeight = Mathf.Max(totalFloors, TConfig.MAX_SHAKE_FLOORS) * blockHeight;
-        float absoluteMaxAngleTan = (globalScreenWidth / 20f) / absoluteMaxTowerHeight;
-        int floorHeight = Mathf.Min(TConfig.MAX_SHAKE_FLOORS, totalFloors);
-        float rotationAngleLimit = Mathf.Atan(absoluteMaxAngleTan) * Mathf.Rad2Deg * ((float)floorHeight) / ((float)TConfig.MAX_SHAKE_FLOORS);
-        return Mathf.Sin((Time.time - shakeStartTime) * TConfig.SHAKE_SPEED) * rotationAngleLimit;
-    }    
 }

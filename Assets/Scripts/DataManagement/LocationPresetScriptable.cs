@@ -1,22 +1,19 @@
-using Arsenal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LocationPresetScriptable", menuName = "Scriptable Objects/LocationPresetScriptable")]
-internal class LocationPresetScriptable : AbstractPresetScriptable
+[Serializable]
+public class LocationBlock : Block
 {
-    [Serializable]
-    private class LocationBlock : Block
-    {
-        [SerializeField]
-        private float _probabilityWeight;
+    [SerializeField]
+    private float _probabilityWeight;
+    public float ProbabilityWeight => _probabilityWeight;
+}
 
-        public float ProbabilityWeight => _probabilityWeight;
-    }
-
-
+[CreateAssetMenu(fileName = "LocationPresetScriptable", menuName = "Scriptable Objects/LocationPresetScriptable")]
+public class LocationPresetScriptable : AbstractPresetScriptable<LocationBlock>
+{
     [SerializeField]
     private Sprite _pendulumHolderImage;
     [SerializeField]
@@ -32,12 +29,12 @@ internal class LocationPresetScriptable : AbstractPresetScriptable
     public Sprite PendulumImage => _pendulumImage;
     public bool ReverseOverlap => _reverseOverlap;
 
-    public override IEnumerable<IBlock> Blocks => _locationBlocks;
+    public override IEnumerable<LocationBlock> Blocks => _locationBlocks;
 
-    public override IBlock NextBlock() 
+    public override LocationBlock NextBlock() 
     {
         if (_locationBlocks.Length == 0)
-            return new Block();
+            return new LocationBlock();
         float totalWeight = _locationBlocks.Sum(x => x.ProbabilityWeight) + 1,
               idx = UnityEngine.Random.Range(0f, 1f) * totalWeight;
         Debug.Log("Block spawn value = " + idx + " with total weight being = " + _locationBlocks.Sum(x => x.ProbabilityWeight));

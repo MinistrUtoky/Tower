@@ -12,33 +12,32 @@ internal class ProgressSaveable : AbstractSaveable<ProgressSaveable>
         public LevelsAvailability(bool[] levels) { _levels = levels; }
     }
 
-    private const string SCORE = "Score";
-    private const string AVAIABLE_LEVELS = "Levels";
-    public int Score => GetInt(SCORE);
+    public int Score => GetInt(MConfig.SCORE);
     public bool[] AvailableLevels
     {
         get
         {
-            string levelsJson = Get(AVAIABLE_LEVELS);
+            string levelsJson = Get(MConfig.AVAIABLE_LEVELS);
+            Debug.Log("Tried to get levels, got " +  levelsJson);
             if (levelsJson == "")
             {
                 SaveOpenLevels(new bool[2] { false, false });
-                levelsJson = Get(AVAIABLE_LEVELS);
+                levelsJson = Get(MConfig.AVAIABLE_LEVELS);
             }
             return JsonUtility.FromJson<LevelsAvailability>(levelsJson).Levels; 
         }
     }
-    public void IncreaseScoreBy(int increase) => Save(SCORE, (Score + increase).ToString());  
+    public void IncreaseScoreBy(int increase) => Save(MConfig.SCORE, (Score + increase).ToString());  
     public bool TryDecreaseScoreBy(int decrease)
     {
         if (Score < decrease) return false;
-        Save(SCORE, (Score - decrease).ToString());
+        Save(MConfig.SCORE, (Score - decrease).ToString());
         return true;
     }    
 
     public void SaveOpenLevels(bool[] levels) => 
-        Save(AVAIABLE_LEVELS, JsonUtility.ToJson(new LevelsAvailability(levels)));
+        Save(MConfig.AVAIABLE_LEVELS, JsonUtility.ToJson(new LevelsAvailability(levels)));
 
     public void ResetOpenLevels() =>
-        Save(AVAIABLE_LEVELS, JsonUtility.ToJson(new LevelsAvailability(new bool[AvailableLevels.Length])));
+        Save(MConfig.AVAIABLE_LEVELS, JsonUtility.ToJson(new LevelsAvailability(new bool[AvailableLevels.Length])));
 }

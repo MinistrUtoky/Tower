@@ -12,31 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f06097b99fd4941a8550f1e0ffa8bc, type: 3}
   m_Name: BasicBlockSet
   m_EditorClassIdentifier: 
-  _blocks:
-  - _name: NoAirCondition
-    _image: {fileID: 135982579003634019, guid: 6c7b712041309054c9d12b7a65986ce8, type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29,
-      type: 3}
-  - _name: YesAirCondition
-    _image: {fileID: -4356277896208165297, guid: 6d6d814be72c3ec4bb95c74701280615,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950,
-      type: 3}
-  - _name: Pink
-    _image: {fileID: -8567008635747675834, guid: 30a881a67cff221419962626e1edb776,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8,
-      type: 3}
-  - _name: Violet
-    _image: {fileID: 3997050368737690522, guid: aab2e34b5e149c34bb1742f41240abc7,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
-      type: 3}
-  - _name: Bomb
-    _image: {fileID: 2503992082558401399, guid: 08f7580c2d16fbd438f4a71ac384bd62,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 63de2c64662e9d44f9181a0883bb28a3,
-      type: 3}
   _pendulumHolderImage: {fileID: -5858441059071933828, guid: a901f427964d52e4d8b9fffedc5b5315,
     type: 3}
   _pendulumImage: {fileID: 1231247277861561731, guid: aca8aef98e6bc5e438d77ab663d27cba,
@@ -44,25 +19,24 @@ MonoBehaviour:
   _reverseOverlap: 0
   _locationBlocks:
   - _name: NoAirCondition
-    _image: {fileID: 5738468995420484106, guid: 2b7a81059a0489147ae6064d9a68c82f,
-      type: 3}
+    _image: {fileID: 135982579003634019, guid: 6c7b712041309054c9d12b7a65986ce8, type: 3}
     _prefab: {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29,
       type: 3}
     _probabilityWeight: 2
   - _name: YesAirCondition
-    _image: {fileID: 5559667929427957976, guid: 89cd2e570a05cc54dbed04305b61b741,
+    _image: {fileID: -4356277896208165297, guid: 6d6d814be72c3ec4bb95c74701280615,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950,
       type: 3}
     _probabilityWeight: 2
   - _name: Pink
-    _image: {fileID: 7730478372224141104, guid: 4e99e443c28d3a440bdb2565536dabdd,
+    _image: {fileID: -8567008635747675834, guid: 30a881a67cff221419962626e1edb776,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8,
       type: 3}
     _probabilityWeight: 1
   - _name: Violet
-    _image: {fileID: -2801409215071612346, guid: 94c6ca2aa61f72843a49361b30fbcb96,
+    _image: {fileID: 3997050368737690522, guid: aab2e34b5e149c34bb1742f41240abc7,
       type: 3}
     _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
       type: 3}
