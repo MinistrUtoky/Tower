@@ -79,16 +79,18 @@ namespace Arsenal
 
         private void LoadArsenalPreset()
         {
-            string path = Path.Combine(Application.streamingAssetsPath, MConfig.ARSENAL_SAVE_FILE_NAME);
+            string path = Path.Combine(Application.persistentDataPath, MConfig.ARSENAL_SAVE_FILE_NAME);
             if (!File.Exists(path)) SavePresetAsJson();
             string json = File.ReadAllText(path);
+            Debug.Log(json);
             ArrayWrapper<ArsenalBlock> arsenal = JsonUtility.FromJson<ArrayWrapper<ArsenalBlock>>(json);
+            Debug.Log(arsenal.Array.Length);
             _arsenalBlocks = arsenal.Array;
         }
 
         public void SavePresetAsJson()
         {
-            string path = Path.Combine(Application.streamingAssetsPath, MConfig.ARSENAL_SAVE_FILE_NAME); ;
+            string path = Path.Combine(Application.persistentDataPath, MConfig.ARSENAL_SAVE_FILE_NAME); ;
             string json = JsonUtility.ToJson(new ArrayWrapper<ArsenalBlock>(_arsenalBlocks));
             File.WriteAllText(path, json);
         }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab74cb82a343f824498b992730d709e5, type: 3}
-  m_Name: Shop
+  m_Name: Shop 1
   m_EditorClassIdentifier: 
   _UIBlock: {fileID: 5933209422151584613, guid: c09139312b5ec6542a562671c4e8f8e6,
     type: 3}
