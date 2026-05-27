@@ -10080,7 +10080,7 @@ MonoBehaviour:
   _infoPopup: {fileID: 1142094489}
   _arsenalShopContent: {fileID: 1750449387}
   _yourArsenalContent: {fileID: 36861715}
-  _arsenalPreset: {fileID: 11400000, guid: 49d8b82aaefb0744baf054ebace72a7b, type: 2}
+  _arsenalPreset: {fileID: 11400000, guid: 2bcfec6cedc04a048afbe947b0d564f8, type: 2}
 --- !u!1 &1994122852
 GameObject:
   m_ObjectHideFlags: 0
