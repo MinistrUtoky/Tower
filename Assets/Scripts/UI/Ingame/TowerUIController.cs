@@ -1,6 +1,8 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 namespace Tower {
@@ -48,9 +50,10 @@ namespace Tower {
 
         public void UpdateHP(int hp)
         {
-            Destroy(_hearts[hp]);
+            for (int i = 0; i < _hearts.Length; i++) _hearts[i].gameObject.SetActive(false);
             for (int i = 0; i < hp; i++)
             {
+                _hearts[i].gameObject.SetActive(true);
                 _hearts[i].DOKill();
                 _hearts[i].DOFade(0, 0.2f).SetEase(Ease.Linear).SetLoops(4, LoopType.Yoyo);
             }
@@ -90,7 +93,13 @@ namespace Tower {
             _cameraToSpawn.DOOrthoSize(_currentScreenWidthCoef * _baseCameraOrthoWidth, 1f);
         }
 
-        public void NewArsenalBlock(Sprite nextBlock) => _arsenalNextBlockVisual.sprite = nextBlock;
+        public async void NewArsenalBlock(string addressableKey)
+        {
+            var handle = Addressables.LoadAssetAsync<Sprite>(addressableKey);
+            await handle.Task;
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+                _arsenalNextBlockVisual.sprite = handle.Result;
+        }
         public void NewProbability(float currentProbability) => _arsenalNextBlockChance.text = (currentProbability * 100).ToString() + "%";
     }
 }

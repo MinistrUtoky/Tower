@@ -18,6 +18,8 @@ EditorBuildSettings:
     path: Assets/Scenes/EndgameMenu.unity
     guid: e746770e9c596fc4eb5496b3288c6332
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 6418a19a73d7c1e409e6671d724b1a34,
+      type: 2}
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3,
       type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 0e696ac13ed10d64fb326ab05afacc81,

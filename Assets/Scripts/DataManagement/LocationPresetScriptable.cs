@@ -31,24 +31,19 @@ public class LocationPresetScriptable : AbstractPresetScriptable<LocationBlock>
 
     public override IEnumerable<LocationBlock> Blocks => _locationBlocks;
 
-    public override LocationBlock NextBlock() 
+    public void BuildAlias()
     {
-        if (_locationBlocks.Length == 0)
-            return new LocationBlock();
-        float totalWeight = _locationBlocks.Sum(x => x.ProbabilityWeight) + 1,
-              idx = UnityEngine.Random.Range(0f, 1f) * totalWeight;
-        Debug.Log("Block spawn value = " + idx + " with total weight being = " + _locationBlocks.Sum(x => x.ProbabilityWeight));
-        float sum = 0;
-        int i = 0;
-        while (i < _locationBlocks.Length) {
-            if (sum > idx)
-                break;
-            sum += _locationBlocks.ElementAt(i).ProbabilityWeight;
-            i++;
-        }
-        Debug.Log("Selected index = " + i);
-        if (i == 0 || i > _locationBlocks.Length) 
-            i = 1;
-        return _locationBlocks[i - 1];
+        float[] weights = new float[Blocks.Count()];
+        for (int i = 0; i < weights.Length; i++)
+            weights[i] = Blocks.ElementAt(i).ProbabilityWeight;
+        _prob = new float[weights.Length];
+        _alias = new int[weights.Length];
+        unsafe { BuildAliasTable(weights, _prob, _alias); }
+    }
+
+    public override LocationBlock NextBlock()
+    {
+        int index = AliasDraw(_prob, _alias, new System.Random());
+        return _locationBlocks[index];
     }
 }

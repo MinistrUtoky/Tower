@@ -54,7 +54,7 @@ internal class CongratsManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            if (Input.touchCount > 0)
+            if (Input.touchCount > 0 || Input.GetMouseButtonDown(0))
                 break;
             yield return null;
         }

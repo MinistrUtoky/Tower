@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_GUID: 768fbabe0b0d2b946a3c908900ad6667
+  m_SerializeEntries:
+  - m_GUID: 03cef3fa3bb2ccd429d61c28defa4a94
+    m_Address: Assets/Prefabs/Tower/Round Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 08f7580c2d16fbd438f4a71ac384bd62
+    m_Address: Assets/Sprites/boom.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 11cdb3e9de3a7ec48b3b3e2ddedd60d8
+    m_Address: Assets/Prefabs/Tower/Pink Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b7a81059a0489147ae6064d9a68c82f
+    m_Address: Assets/Sprites/tower1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30a881a67cff221419962626e1edb776
+    m_Address: Assets/Sprites/block3.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3cb37ffe1e87a6244937b90ce9dca836
+    m_Address: Assets/Prefabs/Tower/Block.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4e99e443c28d3a440bdb2565536dabdd
+    m_Address: Assets/Sprites/tower3.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 61869d2f3cbd7bc4aa3145daf355b47b
+    m_Address: Assets/Sprites/aidblock.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63de2c64662e9d44f9181a0883bb28a3
+    m_Address: Assets/Prefabs/Tower/Bomb Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6c7b712041309054c9d12b7a65986ce8
+    m_Address: Assets/Sprites/block1.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d6d814be72c3ec4bb95c74701280615
+    m_Address: Assets/Sprites/block2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89cd2e570a05cc54dbed04305b61b741
+    m_Address: Assets/Sprites/tower2.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 94c6ca2aa61f72843a49361b30fbcb96
+    m_Address: Assets/Sprites/tower4.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aab2e34b5e149c34bb1742f41240abc7
+    m_Address: Assets/Sprites/block5.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: abde532d229823e4ba20b00a8f4b8b29
+    m_Address: Assets/Prefabs/Tower/Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4089f79dca45f2469a704a89ec8f950
+    m_Address: Assets/Prefabs/Tower/White Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb36916a99c0c0a42adf4267a1501d5a
+    m_Address: Assets/Prefabs/Tower/Healing Block Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 39bfd5b15a3875c4aba7c5407261be39, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: de40acd4db849934a81606f2b43f08c6, type: 2}
+    - {fileID: 11400000, guid: e92c49b7401a0ca4e826b6a28c543a28, type: 2}

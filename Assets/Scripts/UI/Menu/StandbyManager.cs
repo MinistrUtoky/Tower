@@ -28,7 +28,7 @@ internal class StandbyManager : AbstractPanelManager
 
     private string _lastSelectedScene;
        
-    private void Start()
+    private void Awake()
     {
         InterplayData.Default();
         QualitySettings.SetQualityLevel(SettingsSaveable.Instance.QualityLevel, true);
@@ -54,6 +54,7 @@ internal class StandbyManager : AbstractPanelManager
     }
     private void PrepareLocation(LocationPresetScriptable preset)
     {
+        preset.BuildAlias();
         InterplayData.NextPlayPreset(preset, ArsenalManager.ArsenalPreset);
         SetActive(_playerCountSelection, true);
         _locationSelection.SetActive(false);

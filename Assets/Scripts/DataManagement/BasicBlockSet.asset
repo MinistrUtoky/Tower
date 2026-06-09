@@ -19,31 +19,72 @@ MonoBehaviour:
   _reverseOverlap: 0
   _locationBlocks:
   - _name: NoAirCondition
-    _image: {fileID: 135982579003634019, guid: 6c7b712041309054c9d12b7a65986ce8, type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: abde532d229823e4ba20b00a8f4b8b29,
-      type: 3}
+    _image:
+      m_AssetGUID: 6c7b712041309054c9d12b7a65986ce8
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: abde532d229823e4ba20b00a8f4b8b29
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
     _probabilityWeight: 2
   - _name: YesAirCondition
-    _image: {fileID: -4356277896208165297, guid: 6d6d814be72c3ec4bb95c74701280615,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: e4089f79dca45f2469a704a89ec8f950,
-      type: 3}
+    _image:
+      m_AssetGUID: 30a881a67cff221419962626e1edb776
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: e4089f79dca45f2469a704a89ec8f950
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
     _probabilityWeight: 2
   - _name: Pink
-    _image: {fileID: -8567008635747675834, guid: 30a881a67cff221419962626e1edb776,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 11cdb3e9de3a7ec48b3b3e2ddedd60d8,
-      type: 3}
+    _image:
+      m_AssetGUID: 30a881a67cff221419962626e1edb776
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 11cdb3e9de3a7ec48b3b3e2ddedd60d8
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
     _probabilityWeight: 1
   - _name: Violet
-    _image: {fileID: 3997050368737690522, guid: aab2e34b5e149c34bb1742f41240abc7,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 03cef3fa3bb2ccd429d61c28defa4a94,
-      type: 3}
+    _image:
+      m_AssetGUID: aab2e34b5e149c34bb1742f41240abc7
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 03cef3fa3bb2ccd429d61c28defa4a94
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
     _probabilityWeight: 1
   - _name: Bomb
-    _image: {fileID: 2503992082558401399, guid: 08f7580c2d16fbd438f4a71ac384bd62,
-      type: 3}
-    _prefab: {fileID: 6049604689655559132, guid: 63de2c64662e9d44f9181a0883bb28a3,
-      type: 3}
+    _image:
+      m_AssetGUID: 08f7580c2d16fbd438f4a71ac384bd62
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 63de2c64662e9d44f9181a0883bb28a3
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 1
     _probabilityWeight: 1

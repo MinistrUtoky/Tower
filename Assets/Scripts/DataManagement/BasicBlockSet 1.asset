@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f06097b99fd4941a8550f1e0ffa8bc, type: 3}
+  m_Name: BasicBlockSet 1
+  m_EditorClassIdentifier: 
+  _pendulumHolderImage: {fileID: -5858441059071933828, guid: a901f427964d52e4d8b9fffedc5b5315,
+    type: 3}
+  _pendulumImage: {fileID: 1231247277861561731, guid: aca8aef98e6bc5e438d77ab663d27cba,
+    type: 3}
+  _reverseOverlap: 0
+  _locationBlocks:
+  - _name: NoAirCondition
+    _image:
+      m_AssetGUID: 6c7b712041309054c9d12b7a65986ce8
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: abde532d229823e4ba20b00a8f4b8b29
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _probabilityWeight: 2
+  - _name: YesAirCondition
+    _image:
+      m_AssetGUID: 30a881a67cff221419962626e1edb776
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: e4089f79dca45f2469a704a89ec8f950
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _probabilityWeight: 2
+  - _name: Pink
+    _image:
+      m_AssetGUID: 30a881a67cff221419962626e1edb776
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 11cdb3e9de3a7ec48b3b3e2ddedd60d8
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _probabilityWeight: 1
+  - _name: Violet
+    _image:
+      m_AssetGUID: aab2e34b5e149c34bb1742f41240abc7
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 03cef3fa3bb2ccd429d61c28defa4a94
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _probabilityWeight: 1
+  - _name: Bomb
+    _image:
+      m_AssetGUID: 08f7580c2d16fbd438f4a71ac384bd62
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+    _prefab:
+      m_AssetGUID: 63de2c64662e9d44f9181a0883bb28a3
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 1
+    _probabilityWeight: 1

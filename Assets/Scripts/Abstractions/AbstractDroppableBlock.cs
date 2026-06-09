@@ -18,6 +18,7 @@ internal abstract class AbstractDroppableBlock : MonoBehaviour, IDroppable
 
     public BoxCollider2D Collider { get; private set; }
     public Rigidbody2D Rigidbody { get; private set; }
+    public AbstractReleasable<Sprite> SpriteReleasable { get; private set; } = new();
 
     public SpriteRenderer Image => _image;
 

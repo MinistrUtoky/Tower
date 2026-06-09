@@ -1,6 +1,9 @@
 using Arsenal;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Assertions;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Tower
 {
@@ -56,7 +59,7 @@ namespace Tower
                 _awaitStart -= Time.deltaTime;
                 return;
             }
-            if (IsAlive & IsHanging & Input.touchCount > 0)
+            if (IsAlive & IsHanging & (Input.touchCount > 0 || Input.GetMouseButtonDown(0)))
                 if (ScreenPartTouched) DropCurrent();
 
             if (Current != null)
@@ -68,7 +71,8 @@ namespace Tower
                         _shakeStartTime = Time.time;
                         _isShaking = true;
                     }
-                    _towerRoot.rotation = TConfig.ShakeAngleFromTime(TotalFloors, Current.Collider.size.y, _shakeStartTime);
+                    if (Current.Collider != null)
+                        _towerRoot.rotation = TConfig.ShakeAngleFromTime(TotalFloors, Current.Collider.size.y, _shakeStartTime);
                 }
             }
         }
@@ -96,6 +100,12 @@ namespace Tower
             else 
                 _visualsController.UpdateHP(_hp);
         }
+        public override void Heal()
+        {
+            _hp += 1;
+            if (_hp > 2) _hp = 3;
+            _visualsController.UpdateHP(_hp);
+        }
 
         public override void Die()
         {
@@ -103,13 +113,39 @@ namespace Tower
             _visualsController.CallOnDeathBanner(_clickScreenPart, TotalFloors);
         }
 
-        public override void SpawnRandomDroppable()
+        public async override void SpawnRandomDroppable()
         {
             Vector3 whereToSpawn = _pendulum.Position;
             IBlock block = NextBlock();            
-            IDroppable droppable = Instantiate(block.Prefab, whereToSpawn, Quaternion.identity)
-                                                        .transform.GetChild(0).GetComponent<IDroppable>();
-            droppable.Image.sprite = block.Image;
+            var prefabHandle = Addressables.InstantiateAsync(block.PrefabAddressable, whereToSpawn, Quaternion.identity);
+            var spriteHandle = Addressables.LoadAssetAsync<Sprite>(block.ImageAddressable);
+
+            await Task.WhenAll(prefabHandle.Task, spriteHandle.Task);
+
+            if (prefabHandle.Status != AsyncOperationStatus.Succeeded)
+            {
+                Debug.LogError($"Failed to load {block.PrefabAddressable}");
+                return;
+            }
+            GameObject spawned = prefabHandle.Result;
+            IDroppable droppable = spawned.transform.GetChild(0).GetComponent<IDroppable>();
+            if (droppable == null)
+            {
+                Debug.LogError("Spawned prefab missing IDroppable on child 0");
+                Addressables.ReleaseInstance(spawned);
+                return;
+            }
+            if (spriteHandle.Status == AsyncOperationStatus.Succeeded && spriteHandle.Result != null)
+            {
+                droppable.Image.sprite = spriteHandle.Result;
+                droppable.SpriteReleasable.AttachAddressableHandle(spriteHandle);
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to load {block.ImageAddressable}");
+                spriteHandle.IsValid(); 
+                Addressables.Release(spriteHandle);
+            }
             base.SpawnDroppable(droppable);
         }
 
@@ -120,7 +156,7 @@ namespace Tower
                 _nextProbabilityIndex = 0;
                 _lastArsenalBlock = InterplayData.Arsenal.NextBlock();
                 _visualsController.NewProbability(_lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex]);
-                _visualsController.NewArsenalBlock(_lastArsenalBlock.Image);
+                _visualsController.NewArsenalBlock(_lastArsenalBlock.ImageAddressable);
                 return InterplayData.Location.NextBlock();
             }
             if (_lastArsenalBlock.ProbabilitiesByTurn.Length == 0) return InterplayData.Location.NextBlock();
@@ -132,7 +168,7 @@ namespace Tower
                 _lastArsenalBlock = InterplayData.Arsenal.NextBlock();
                 _nextProbabilityIndex = 0;
                 _visualsController.NewProbability(_lastArsenalBlock.ProbabilitiesByTurn[_nextProbabilityIndex]);
-                _visualsController.NewArsenalBlock(_lastArsenalBlock.Image);
+                _visualsController.NewArsenalBlock(_lastArsenalBlock.ImageAddressable);
             }
             else
             {

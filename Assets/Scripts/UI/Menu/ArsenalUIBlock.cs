@@ -16,9 +16,12 @@ namespace Arsenal {
         [SerializeField]
         private TMP_Text _probabilityCurve;
 
+        private AbstractReleasable<Sprite> _spriteReleasable=new();
+
         public Sprite Icon { get; private set; }
         public string Name { get; private set; }
         public float[] PerTurnProbabilities { get; private set; }
+        public AbstractReleasable<Sprite> SpriteReleasable => _spriteReleasable;
 
         public void Init(UnityAction blockClickCommand, Sprite icon, string name, float[] perTurnProbabilities)
         {
@@ -38,5 +41,7 @@ namespace Arsenal {
             }
             _probabilityCurve.text = sb.ToString();
         }
+
+        private void OnDestroy() => _spriteReleasable.ReleaseResources();
     }
 }

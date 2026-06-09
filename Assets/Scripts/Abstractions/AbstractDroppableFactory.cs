@@ -51,6 +51,7 @@ namespace Tower
         }
 
         public abstract void TakeHit();
+        public abstract void Heal();
 
         public virtual void Die()
         {
