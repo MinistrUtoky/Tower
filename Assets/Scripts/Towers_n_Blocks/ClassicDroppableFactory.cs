@@ -1,4 +1,5 @@
 using Arsenal;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -52,7 +53,7 @@ namespace Tower
             if (IsHanging)
                 Current.Collider.transform.position = _pendulum.Position;
 
-            if (!TransitionManager.Instance.GameOn) return;
+            if (!TransitionManager.Instance.GameOn) return; 
 
             if (_awaitStart > 0f)
             {
@@ -113,27 +114,30 @@ namespace Tower
             _visualsController.CallOnDeathBanner(_clickScreenPart, TotalFloors);
         }
 
-        public async override void SpawnRandomDroppable()
+        public override void SpawnRandomDroppable()
+        {
+            StartCoroutine(SpawnRoutine());
+        }
+
+        private IEnumerator SpawnRoutine()
         {
             Vector3 whereToSpawn = _pendulum.Position;
-            IBlock block = NextBlock();            
+            IBlock block = NextBlock();
+
             var prefabHandle = Addressables.InstantiateAsync(block.PrefabAddressable, whereToSpawn, Quaternion.identity);
             var spriteHandle = Addressables.LoadAssetAsync<Sprite>(block.ImageAddressable);
 
-            await Task.WhenAll(prefabHandle.Task, spriteHandle.Task);
+            yield return prefabHandle;
+            yield return spriteHandle;
 
             if (prefabHandle.Status != AsyncOperationStatus.Succeeded)
-            {
-                Debug.LogError($"Failed to load {block.PrefabAddressable}");
-                return;
-            }
+                yield break;
             GameObject spawned = prefabHandle.Result;
             IDroppable droppable = spawned.transform.GetChild(0).GetComponent<IDroppable>();
             if (droppable == null)
             {
-                Debug.LogError("Spawned prefab missing IDroppable on child 0");
                 Addressables.ReleaseInstance(spawned);
-                return;
+                yield break;
             }
             if (spriteHandle.Status == AsyncOperationStatus.Succeeded && spriteHandle.Result != null)
             {
@@ -142,8 +146,7 @@ namespace Tower
             }
             else
             {
-                Debug.LogWarning($"Failed to load {block.ImageAddressable}");
-                spriteHandle.IsValid(); 
+                spriteHandle.IsValid();
                 Addressables.Release(spriteHandle);
             }
             base.SpawnDroppable(droppable);

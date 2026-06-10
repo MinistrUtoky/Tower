@@ -65,10 +65,12 @@ namespace Tower
             droppable.OnInit(this);
             _current = droppable;
             IsHanging = true;
+            print("Block spawned");
         }
 
         protected void DropCurrent()
         {
+            print("Block drop initiated");
             IsHanging = false;
             _current.OnDrop();
         }
